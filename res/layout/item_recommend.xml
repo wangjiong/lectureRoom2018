@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rec_ScrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fadingEdge="vertical"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- head -->
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="180dp" >
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <LinearLayout
+                android:id="@+id/viewGroup"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="#fff"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:orientation="vertical" >
+
+            <!-- 最近热播 -->
+
+            <include
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/movie_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" >
+
+                <include
+                    android:id="@+id/recommend1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/movie_item_image_rec" />
+            </LinearLayout>
+
+            <!-- 经典热播 -->
+
+            <include
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/movie_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" >
+
+                <include
+                    android:id="@+id/recommend2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/movie_item_image_rec" />
+            </LinearLayout>
+
+            <!-- 以往热播 -->
+
+            <include
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/movie_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" >
+
+                <include
+                    android:id="@+id/recommend3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/movie_item_image_rec" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

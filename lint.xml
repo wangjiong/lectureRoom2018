@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="HandlerLeak" severity="ignore" />
+    <issue id="NewApi">
+        <ignore path="src/com/lecture/main/History.java" />
+    </issue>
+    <issue id="SdCardPath" severity="ignore" />
+    <issue id="SimpleDateFormat" severity="ignore" />
+</lint>
