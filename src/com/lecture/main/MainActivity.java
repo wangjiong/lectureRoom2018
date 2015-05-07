@@ -1,6 +1,7 @@
 package com.lecture.main;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -26,30 +27,39 @@ public class MainActivity extends Activity implements ItemFragment.Callbacks {
 
 	private void initView() {
 		setContentView(R.layout.main);
-		itemRecommend = new ItemRecommend();
-		itemPerson = new ItemPerson();
-		getFragmentManager().beginTransaction()
-				.replace(R.id.content, itemRecommend).commit();
+		onItemSelected(1);
 	}
 
 	@Override
 	public void onItemSelected(Integer id) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		hideFragments(ft);
 		switch (id) {
 		case 1:
-			if (fragment != 1) {
-				getFragmentManager().beginTransaction()
-						.replace(R.id.content, itemRecommend).commit();
-				fragment = 1;
+			if (itemRecommend != null) {
+				ft.show(itemRecommend);
+			} else {
+				itemRecommend = new ItemRecommend();
+				ft.add(R.id.content, itemRecommend);
 			}
 			break;
 		case 4:
-			if (fragment != 4) {
-				getFragmentManager().beginTransaction()
-						.replace(R.id.content, itemPerson).commit();
-				fragment = 4;
+			if (itemPerson != null) {
+				ft.show(itemPerson);
+			} else {
+				itemPerson = new ItemPerson();
+				ft.add(R.id.content, itemPerson);
 			}
 			break;
 		}
+		ft.commit();
+	}
+
+	public void hideFragments(FragmentTransaction ft) {
+		if (itemRecommend != null)
+			ft.hide(itemRecommend);
+		if (itemPerson != null)
+			ft.hide(itemPerson);
 	}
 
 	private long mExitTime;
