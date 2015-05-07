@@ -46,7 +46,7 @@ public class MyMediaController extends MediaController {
 	int segment = 1;
 	File file;
 
-	public MyMediaController(Activity arg0,UnitBean arg1, final String[] arg2) {
+	public MyMediaController(Activity arg0, UnitBean arg1, final String[] arg2) {
 		super(arg0);
 		// 数据
 		this.mActivity = arg0;
@@ -77,10 +77,16 @@ public class MyMediaController extends MediaController {
 				// 创建文件夹
 				file = DbData.createDownload(unitBean);
 				if (file.listFiles() != null) {
-					segment = file.listFiles().length + 1;
-					if (segment > unitBean.getSegment()) {
+					segment = file.listFiles().length;
+					if(segment==0)
+						segment++;
+					if (segment == unitBean.getSegment()) {
 						Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
 						return;
+					} else {
+						File f = new File(file + "/movie" + (segment > 9 ? segment : ("0" + segment)) + ".mp4");
+						if (f.exists())
+							f.delete();
 					}
 				}
 				download();
@@ -93,49 +99,51 @@ public class MyMediaController extends MediaController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void download() {
 		FinalHttp fh = new FinalHttp();
-		handler = fh.download(Urls[segment - 1], new AjaxParams(),
-				file + "/movie" + (segment > 9 ? segment : ("0" + segment)) + ".mp4", true , 
-				new AjaxCallBack() {
-					@Override
-					public void onLoading(long count, long current) {
-						
-					}
-					
-					@Override
-					public void onSuccess(Object t) {
-						if (segment != unitBean.getSegment()) {
-							segment++;
-							download();
-							if(PersonDownload.adapter!=null && PersonDownload.downloadBeans!=null){
-								PersonDownload.downloadBeans = DbData.readDownload();
-								Collections.reverse(PersonDownload.downloadBeans);
-								PersonDownload.adapter.notifyDataSetChanged();
-							}
-							
-						} else {
-							Toast.makeText(mActivity, "下载完成",Toast.LENGTH_SHORT).show();
-							System.out.println(segment + "下载完成");
-							isDownload=false;
-						}
+		handler = fh.download(Urls[segment - 1], new AjaxParams(), file + "/movie" + (segment > 9 ? segment : ("0" + segment)) + ".mp4", true, new AjaxCallBack() {
+			@Override
+			public void onLoading(long count, long current) {
+
+			}
+
+			@Override
+			public void onSuccess(Object t) {
+				if (segment != unitBean.getSegment()) {
+					segment++;
+					download();
+					if (PersonDownload.adapter != null && PersonDownload.downloadBeans != null) {
+						PersonDownload.downloadBeans = DbData.readDownload();
+						Collections.reverse(PersonDownload.downloadBeans);
+						PersonDownload.adapter.notifyDataSetChanged();
 					}
 
-					@Override
-					public void onFailure(Throwable t , int errorNo , String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						System.out.println("onFailure    "+"t"+t.toString()+"    errorNo"+errorNo+"    strMsg"+strMsg);
-						download();
+				} else {
+					Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
+					if (PersonDownload.adapter != null && PersonDownload.downloadBeans != null) {
+						PersonDownload.downloadBeans = DbData.readDownload();
+						Collections.reverse(PersonDownload.downloadBeans);
+						PersonDownload.adapter.notifyDataSetChanged();
 					}
-				});
+					isDownload = false;
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				super.onFailure(t, errorNo, strMsg);
+				System.out.println("onFailure    " + "t" + t.toString() + "    errorNo" + errorNo + "    strMsg" + strMsg);
+				download();
+			}
+		});
 	}
 
 	@Override
 	public void show(int timeout) {
 		super.show(timeout);
 		// 通过SimpleDateFormat获取24小时制时间
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm" , Locale.getDefault());
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
 		time.setText(sdf.format(new Date()));
 		// 获取电池电量
-		Intent batteryInfoIntent = mActivity.getApplicationContext().registerReceiver(null,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		Intent batteryInfoIntent = mActivity.getApplicationContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		int level = batteryInfoIntent.getIntExtra("level", 0);
 		if (level > 80) {
 			power.setBackgroundResource(R.drawable.power01);
