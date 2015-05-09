@@ -80,37 +80,17 @@ public class PersonHistoryAct extends Activity implements OnItemClickListener {
 			ViewHolder holder;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = LayoutInflater.from(PersonHistoryAct.this).inflate(
-						R.layout.person_history_item, null);
-				holder.imageView = (ImageView) convertView
-						.findViewById(R.id.image_intro);
-				holder.textView = (TextView) convertView
-						.findViewById(R.id.text_intro);
+				convertView = LayoutInflater.from(PersonHistoryAct.this).inflate(R.layout.person_history_item, null);
+				holder.imageView = (ImageView) convertView.findViewById(R.id.image_intro);
+				holder.textView = (TextView) convertView.findViewById(R.id.text_intro);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img"
-					+ historyBeans.get(position).getId() + ".jpg"));
-			holder.textView.setText("名称：《"
-					+ historyBeans.get(position).getTitle()
-					+ "》\n集数："
-					+ historyBeans.get(position).getNum()
-					+ "\n作者："
-					+ historyBeans.get(position).getAuthor()
-					+ "\n首播时间："
-					+ historyBeans.get(position).getId().substring(0, 4)
-					+ "-"
-					+ historyBeans.get(position).getId().substring(4, 6)
-					+ "-"
-					+ historyBeans.get(position).getId().substring(6)
-					+ "\n播放集数："
-					+ historyBeans.get(position).getEpisode()
-					+ "\n标题："
-					+ historyBeans.get(position).getName()
-					+ "\n播放时间："
-					+ new SimpleDateFormat("mm:ss").format(new Date(Integer
-							.parseInt(historyBeans.get(position).getTime()))));
+			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + historyBeans.get(position).getId() + ".jpg"));
+			holder.textView.setText("名称：《" + historyBeans.get(position).getTitle() + "》\n集数：" + historyBeans.get(position).getNum() + "\n作者：" + historyBeans.get(position).getAuthor() + "\n首播时间：" + historyBeans.get(position).getId().substring(0, 4) + "-"
+					+ historyBeans.get(position).getId().substring(4, 6) + "-" + historyBeans.get(position).getId().substring(6) + "\n播放集数：" + historyBeans.get(position).getEpisode() + "\n标题：" + historyBeans.get(position).getName() + "\n播放时间："
+					+ new SimpleDateFormat("mm:ss").format(new Date(Integer.parseInt(historyBeans.get(position).getTime()))));
 
 			return convertView;
 		}
@@ -122,15 +102,12 @@ public class PersonHistoryAct extends Activity implements OnItemClickListener {
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		historyBean = historyBeans.get(position);
 		System.out.println(historyBean.getTitle());
 		Intent intent = new Intent(this, MovieHistoryAct.class);
 		startActivity(intent);
 	}
-	
-	
 
 	@Override
 	protected void onResume() {
@@ -139,7 +116,7 @@ public class PersonHistoryAct extends Activity implements OnItemClickListener {
 			initData();
 			listView.setAdapter(adapter);
 			adapter.notifyDataSetChanged();
-		}else{
+		} else {
 			isFirstStart = false;
 		}
 	}

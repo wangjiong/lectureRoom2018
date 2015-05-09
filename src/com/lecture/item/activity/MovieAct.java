@@ -22,11 +22,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.Toast;
+
 import com.lecture.data.DbData;
 import com.lecture.data.HistoryBean;
 import com.lecture.data.UnitBean;
 import com.lecture.item.view.MyMediaControllerView;
 import com.lecture.media.R;
+import com.lecture.util.Param;
 
 public class MovieAct extends Activity implements OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback, MediaPlayerControl, OnErrorListener, OnInfoListener {
 	// Êý¾Ý
@@ -60,7 +62,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	}
 
 	private void initData() {
-		int episode = Integer.parseInt(getIntent().getStringExtra(MovieIntroAct.EPISODE_KEY));
+		int episode = Integer.parseInt(getIntent().getStringExtra(Param.EPISODE_KEY));
 		unitBean = DbData.getUnitBeanByTitleAndEpisode(MovieIntroAct.programBean.getName(), episode);
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();

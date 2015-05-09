@@ -18,9 +18,9 @@ import com.lecture.data.ProgramBean;
 import com.lecture.item.activity.MoreAct;
 import com.lecture.item.activity.MovieIntroAct;
 import com.lecture.media.R;
+import com.lecture.util.Param;
 
 public class RecommendFrag extends Fragment {
-	public static final String MOVIE_KEY = "com.lecture.media.movie";
 	// 数据
 	ArrayList<ProgramBean> programTodays;// 今日热播
 	ArrayList<ProgramBean> programHots;// 金典热播
@@ -104,7 +104,7 @@ public class RecommendFrag extends Fragment {
 			movie_images[i].setOnClickListener(new OnClickListener() {
 				public void onClick(View view) {
 					Intent intent = new Intent(getActivity(), MovieIntroAct.class);
-					intent.putExtra(MOVIE_KEY, programBeans.get(j).getId());
+					intent.putExtra(Param.MOVIE_KEY, programBeans.get(j).getId());
 					startActivity(intent);
 				}
 			});

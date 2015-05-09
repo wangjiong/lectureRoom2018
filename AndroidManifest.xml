@@ -55,6 +55,8 @@
         </activity>
         <activity android:name="com.lecture.item.activity.PersonDownloadAct" >
         </activity>
+        <activity android:name="com.lecture.item.activity.MoreAct" >
+        </activity>
     </application>
 
 </manifest>

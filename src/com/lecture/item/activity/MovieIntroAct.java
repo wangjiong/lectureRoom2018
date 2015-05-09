@@ -17,13 +17,12 @@ import android.widget.Toast;
 
 import com.lecture.data.DbData;
 import com.lecture.data.ProgramBean;
-import com.lecture.item.fragment.RecommendFrag;
 import com.lecture.media.R;
+import com.lecture.util.Param;
 
 public class MovieIntroAct extends Activity {
 	// 数据
 	public static ProgramBean programBean;
-	public static final String EPISODE_KEY = "com.lecture.media.episode";
 	// 布局
 	ImageView movie_image; // 节目图片
 	TextView description;// 节目详细信息
@@ -41,7 +40,7 @@ public class MovieIntroAct extends Activity {
 	}
 
 	private void initData() {
-		String id = getIntent().getStringExtra(RecommendFrag.MOVIE_KEY);
+		String id = getIntent().getStringExtra(Param.MOVIE_KEY);
 		programBean = DbData.getProgramBeanById(id);
 	}
 
@@ -111,7 +110,7 @@ public class MovieIntroAct extends Activity {
 									}
 									// 传递信息集数
 									Intent intent = new Intent(MovieIntroAct.this, MovieAct.class);
-									intent.putExtra(EPISODE_KEY, s);
+									intent.putExtra(Param.EPISODE_KEY, s);
 									startActivity(intent);
 								}
 							});
@@ -123,7 +122,7 @@ public class MovieIntroAct extends Activity {
 						}
 						// 传递信息
 						Intent intent = new Intent(MovieIntroAct.this, MovieAct.class);
-						intent.putExtra(EPISODE_KEY, s);
+						intent.putExtra(Param.EPISODE_KEY, s);
 						startActivity(intent);
 					}
 				}
@@ -157,7 +156,7 @@ public class MovieIntroAct extends Activity {
 							}
 							// 传递信息集数
 							Intent intent = new Intent(MovieIntroAct.this, MovieAct.class);
-							intent.putExtra(EPISODE_KEY, s);
+							intent.putExtra(Param.EPISODE_KEY, s);
 							startActivity(intent);
 						}
 					});

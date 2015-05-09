@@ -139,6 +139,24 @@ public class DbData {
 		}
 		return programBeans;
 	}
+	
+	//¸ü¶à
+	@SuppressWarnings("deprecation")
+	public static ArrayList<ProgramBean> getProgramBeansMore() {
+		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
+		Cursor cursor = db.rawQuery("select * from program", null);
+		while (cursor.moveToNext()) {
+			ProgramBean programBean = new ProgramBean();
+			programBean.setId(cursor.getString(0));
+			programBean.setName(cursor.getString(1));
+			programBean.setAuthor(cursor.getString(2));
+			programBean.setPlayTime(cursor.getInt(3));
+			programBean.setNum((cursor.getInt(4)));
+			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
+			programBeans.add(programBean);
+		}
+		return programBeans;
+	}
 
 	// ËÑË÷
 	public static List<String> getSearchStrings() {

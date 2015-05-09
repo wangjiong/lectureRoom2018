@@ -130,17 +130,18 @@ public final class R {
         public static final int media=0x7f030004;
         public static final int media_controller=0x7f030005;
         public static final int mediacontroller=0x7f030006;
-        public static final int movie_image=0x7f030007;
-        public static final int movie_intro=0x7f030008;
-        public static final int movie_item_image_rec=0x7f030009;
-        public static final int movie_line=0x7f03000a;
-        public static final int person_download=0x7f03000b;
-        public static final int person_download_item=0x7f03000c;
-        public static final int person_history=0x7f03000d;
-        public static final int person_history_item=0x7f03000e;
-        public static final int pull_list_head=0x7f03000f;
-        public static final int pull_view=0x7f030010;
-        public static final int search=0x7f030011;
+        public static final int more_item=0x7f030007;
+        public static final int movie_image=0x7f030008;
+        public static final int movie_intro=0x7f030009;
+        public static final int movie_item_image_rec=0x7f03000a;
+        public static final int movie_line=0x7f03000b;
+        public static final int person_download=0x7f03000c;
+        public static final int person_download_item=0x7f03000d;
+        public static final int person_history=0x7f03000e;
+        public static final int person_history_item=0x7f03000f;
+        public static final int pull_list_head=0x7f030010;
+        public static final int pull_view=0x7f030011;
+        public static final int search=0x7f030012;
     }
     public static final class menu {
         public static final int main=0x7f090000;

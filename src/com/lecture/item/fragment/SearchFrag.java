@@ -23,60 +23,56 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
+import com.lecture.item.activity.MovieIntroAct;
 import com.lecture.item.view.KeywordsView;
 import com.lecture.media.R;
+import com.lecture.util.Param;
 
 public class SearchFrag extends Fragment implements View.OnClickListener {
 	private String[] totalKeys = null;
 	private String[] key_words = new String[18];
-	
-	private String[] movie_texts=(String[]) DbData.getSearchStrings().toArray(new String[0]);
+	private boolean isHasChild = true;
+	private String[] movie_texts = (String[]) DbData.getSearchStrings().toArray(new String[0]);
 	private KeywordsView showKeywords = null;
 	private LinearLayout searchLayout = null;
 	private GestureDetector gestureDetector;
 	private boolean isOutter;
-	
-	EditText search_text=null;
-	Button search_button=null;
-	TextView search_back=null;
+
+	EditText search_text = null;
+	Button search_button = null;
+	TextView search_back = null;
+
 	@SuppressWarnings("deprecation")
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.search, container, false);
-		search_text=(EditText)view.findViewById(R.id.search_text);
-		search_button=(Button)view.findViewById(R.id.search_button);
-		search_button.setOnClickListener(new OnClickListener(){
+		search_text = (EditText) view.findViewById(R.id.search_text);
+		search_button = (Button) view.findViewById(R.id.search_button);
+		search_button.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
-				String text=(search_text.getText()).toString().trim();
-				int j=0;
-				for(int i=0;i<movie_texts.length;++i){
-					if(movie_texts[i].equals(text)){
-						j=i;
-						break;
-					}
+				String text = (search_text.getText()).toString().trim();
+				Intent intent = new Intent(getActivity(), MovieIntroAct.class);
+				String id = DbData.getProgramBeanIdByUnitBeanTitle(text.substring(1, text.length() - 1));
+				if (id != null) {
+					intent.putExtra(Param.MOVIE_KEY, id);
+					startActivity(intent);
+				} else {
+					Toast.makeText(getActivity(),"抱歉！没有找到", Toast.LENGTH_SHORT).show();
 				}
-//				if(j>=6&&j<=11){
-//					Intent intent = new Intent(getActivity(), Movie_intro.class);
-//					Integer id=Movie_res.movie_images[j];
-//					intent.putExtra("image_id",id.toString());
-//					getActivity().startActivity(intent);
-//				}else{
-//					Toast.makeText(getActivity(),"抱歉！暂时不能播放",Toast.LENGTH_SHORT).show();
-//				}
 			}
 		});
-		search_back=(TextView)view.findViewById(R.id.search_back);
-		search_back.setOnClickListener(new OnClickListener(){
+		search_back = (TextView) view.findViewById(R.id.search_back);
+		search_back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				search_text.setText("");
-//				getFragmentManager().beginTransaction().replace(R.id.content,new ItemSearch()).commit();
+				handler.sendEmptyMessage(Msg_Start_Load);
+				if (isHasChild == false) {
+					searchLayout.addView(showKeywords);
+					isOutter = true;
+					isHasChild = true;
+				}
 			}
 		});
-		
-		
-		
-		
 		searchLayout = (LinearLayout) view.findViewById(R.id.searchContent);
 		showKeywords = (KeywordsView) view.findViewById(R.id.word);
 		showKeywords.setDuration(2000l);
@@ -89,9 +85,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 			}
 		});
 		isOutter = true;
-
 		handler.sendEmptyMessage(Msg_Start_Load);
-
 		return view;
 	}
 
@@ -105,8 +99,6 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 			for (int i = 0; i < keys.length; i++) {
 				int k = (int) (ks.size() * Math.random());
 				keys[i] = ks.remove(k);
-				if (keys[i] == null)
-					System.out.println("nulnulnulnulnul");
 			}
 			System.out.println("result's length = " + keys.length);
 			return keys;
@@ -118,7 +110,6 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 	private static final int Msg_Load_End = 0x0203;
 
 	private LoadKeywordsTask task = null;
-
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -172,8 +163,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 		}
 
 		@Override
-		public boolean onScroll(MotionEvent e1, MotionEvent e2,
-				float distanceX, float distanceY) {
+		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 			return false;
 		}
 
@@ -182,8 +172,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 		}
 
 		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			if (e2.getX() - e1.getX() > 100) { // 右滑
 				key_words = getRandomArray();
 				showKeywords.rubKeywords();
@@ -223,10 +212,10 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 			String kw = ((TextView) v).getText().toString();
 			if (!kw.trim().equals("")) {
 				searchLayout.removeAllViews();
+				isHasChild = false;
 			}
 			search_text.setText(kw);
 		}
-		
+
 	}
 }
-
