@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.lecture.view.RTPullListView
+    <com.lecture.item.view.RTPullListView
         android:id="@+id/pullListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />

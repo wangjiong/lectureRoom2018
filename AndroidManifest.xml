@@ -34,25 +34,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
-            android:name="com.lecture.main.Movie"
+            android:name="com.lecture.item.activity.MovieAct"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="com.lecture.main.MovieHistory"
+            android:name="com.lecture.item.activity.MovieHistoryAct"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
-            android:name="com.lecture.main.MovieDownload"
+            android:name="com.lecture.item.activity.MovieDownloadAct"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         
-        <activity android:name="com.lecture.main.MovieIntro" >
+        <activity android:name="com.lecture.item.activity.MovieIntroAct" >
         </activity>
-        <activity android:name="com.lecture.main.PersonHistory" >
+        <activity android:name="com.lecture.item.activity.PersonHistoryAct" >
         </activity>
-        <activity android:name="com.lecture.main.PersonDownload" >
+        <activity android:name="com.lecture.item.activity.PersonDownloadAct" >
         </activity>
     </application>
 

@@ -7,11 +7,16 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
+import com.lecture.item.fragment.ItemFrag;
+import com.lecture.item.fragment.PersonFrag;
+import com.lecture.item.fragment.RecommendFrag;
+import com.lecture.item.fragment.SearchFrag;
 import com.lecture.media.R;
 
-public class MainActivity extends Activity implements ItemFragment.Callbacks {
-	ItemRecommend itemRecommend;
-	ItemPerson itemPerson;
+public class MainActivity extends Activity implements ItemFrag.Callbacks {
+	RecommendFrag recommendFrag;
+	SearchFrag searchFrag;
+	PersonFrag personFrag;
 	int fragment = 1;
 
 	@Override
@@ -36,19 +41,27 @@ public class MainActivity extends Activity implements ItemFragment.Callbacks {
 		hideFragments(ft);
 		switch (id) {
 		case 1:
-			if (itemRecommend != null) {
-				ft.show(itemRecommend);
+			if (recommendFrag != null) {
+				ft.show(recommendFrag);
 			} else {
-				itemRecommend = new ItemRecommend();
-				ft.add(R.id.content, itemRecommend);
+				recommendFrag = new RecommendFrag();
+				ft.add(R.id.content, recommendFrag);
+			}
+			break;
+		case 3:
+			if (searchFrag != null) {
+				ft.show(searchFrag);
+			} else {
+				searchFrag = new SearchFrag();
+				ft.add(R.id.content, searchFrag);
 			}
 			break;
 		case 4:
-			if (itemPerson != null) {
-				ft.show(itemPerson);
+			if (personFrag != null) {
+				ft.show(personFrag);
 			} else {
-				itemPerson = new ItemPerson();
-				ft.add(R.id.content, itemPerson);
+				personFrag = new PersonFrag();
+				ft.add(R.id.content, personFrag);
 			}
 			break;
 		}
@@ -56,10 +69,12 @@ public class MainActivity extends Activity implements ItemFragment.Callbacks {
 	}
 
 	public void hideFragments(FragmentTransaction ft) {
-		if (itemRecommend != null)
-			ft.hide(itemRecommend);
-		if (itemPerson != null)
-			ft.hide(itemPerson);
+		if (recommendFrag != null)
+			ft.hide(recommendFrag);
+		if (searchFrag != null)
+			ft.hide(searchFrag);
+		if (personFrag != null)
+			ft.hide(personFrag);
 	}
 
 	private long mExitTime;

@@ -27,30 +27,33 @@ public final class R {
         public static final int activity_vertical_margin=0x7f080001;
     }
     public static final class drawable {
-        public static final int border=0x7f020000;
-        public static final int border_media=0x7f020001;
-        public static final int border_person=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int mediacontroller_button=0x7f020004;
-        public static final int mediacontroller_pause=0x7f020005;
-        public static final int mediacontroller_play=0x7f020006;
-        public static final int movie=0x7f020007;
-        public static final int page_indicator1=0x7f020008;
-        public static final int page_indicator_focused1=0x7f020009;
-        public static final int power01=0x7f02000a;
-        public static final int power02=0x7f02000b;
-        public static final int power03=0x7f02000c;
-        public static final int power04=0x7f02000d;
-        public static final int pulltorefresh=0x7f02000e;
-        public static final int scrubber_control_disabled_holo=0x7f02000f;
-        public static final int scrubber_control_focused_holo=0x7f020010;
-        public static final int scrubber_control_normal_holo=0x7f020011;
-        public static final int scrubber_control_pressed_holo=0x7f020012;
-        public static final int scrubber_control_selector_holo=0x7f020013;
-        public static final int scrubber_primary_holo=0x7f020014;
-        public static final int scrubber_progress_horizontal_holo_dark=0x7f020015;
-        public static final int scrubber_secondary_holo=0x7f020016;
-        public static final int scrubber_track_holo_dark=0x7f020017;
+        public static final int blank=0x7f020000;
+        public static final int border=0x7f020001;
+        public static final int border_media=0x7f020002;
+        public static final int border_person=0x7f020003;
+        public static final int edittext=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int mediacontroller_button=0x7f020006;
+        public static final int mediacontroller_pause=0x7f020007;
+        public static final int mediacontroller_play=0x7f020008;
+        public static final int movie=0x7f020009;
+        public static final int page_indicator1=0x7f02000a;
+        public static final int page_indicator_focused1=0x7f02000b;
+        public static final int power01=0x7f02000c;
+        public static final int power02=0x7f02000d;
+        public static final int power03=0x7f02000e;
+        public static final int power04=0x7f02000f;
+        public static final int pulltorefresh=0x7f020010;
+        public static final int scrubber_control_disabled_holo=0x7f020011;
+        public static final int scrubber_control_focused_holo=0x7f020012;
+        public static final int scrubber_control_normal_holo=0x7f020013;
+        public static final int scrubber_control_pressed_holo=0x7f020014;
+        public static final int scrubber_control_selector_holo=0x7f020015;
+        public static final int scrubber_primary_holo=0x7f020016;
+        public static final int scrubber_progress_horizontal_holo_dark=0x7f020017;
+        public static final int scrubber_secondary_holo=0x7f020018;
+        public static final int scrubber_track_holo_dark=0x7f020019;
+        public static final int search=0x7f02001a;
     }
     public static final class id {
         public static final int MainView=0x7f0a0011;
@@ -82,7 +85,7 @@ public final class R {
         public static final int line1=0x7f0a0009;
         public static final int line2=0x7f0a000b;
         public static final int line3=0x7f0a000d;
-        public static final int media=0x7f0a0039;
+        public static final int media=0x7f0a003f;
         public static final int media_controller_download=0x7f0a0017;
         public static final int mediacontroller_file_name=0x7f0a001c;
         public static final int mediacontroller_play_pause=0x7f0a0018;
@@ -104,14 +107,20 @@ public final class R {
         public static final int recommend2=0x7f0a000c;
         public static final int recommend3=0x7f0a000e;
         public static final int search=0x7f0a0002;
+        public static final int searchContent=0x7f0a003d;
+        public static final int searchL1=0x7f0a0039;
+        public static final int search_back=0x7f0a003a;
+        public static final int search_button=0x7f0a003c;
+        public static final int search_text=0x7f0a003b;
         public static final int surface=0x7f0a0012;
         public static final int text_download=0x7f0a002f;
         public static final int text_intro=0x7f0a0021;
         public static final int time=0x7f0a0016;
         public static final int title=0x7f0a0014;
-        public static final int vedio=0x7f0a003a;
+        public static final int vedio=0x7f0a0040;
         public static final int viewGroup=0x7f0a0008;
         public static final int viewPager=0x7f0a0007;
+        public static final int word=0x7f0a003e;
     }
     public static final class layout {
         public static final int item_fragment=0x7f030000;
@@ -131,6 +140,7 @@ public final class R {
         public static final int person_history_item=0x7f03000e;
         public static final int pull_list_head=0x7f03000f;
         public static final int pull_view=0x7f030010;
+        public static final int search=0x7f030011;
     }
     public static final class menu {
         public static final int main=0x7f090000;

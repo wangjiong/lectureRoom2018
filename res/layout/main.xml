@@ -11,7 +11,7 @@
 		android:layout_weight="1"
 		/>
 	<fragment
-		android:name="com.lecture.main.ItemFragment"
+	    android:name="com.lecture.item.fragment.ItemFrag"
 		android:id="@+id/item"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
