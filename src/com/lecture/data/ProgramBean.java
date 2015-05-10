@@ -12,6 +12,10 @@ public class ProgramBean {
 	 */
 	String Name;
 	/**
+	 * 朝代
+	 */
+	int Dynasty;
+	/**
 	 * 节目作者
 	 */
 	String Author;
@@ -33,7 +37,7 @@ public class ProgramBean {
 	public void setId(String id) {
 		Id = id;
 	}
-
+	
 	public String getName() {
 		return Name;
 	}
@@ -41,7 +45,14 @@ public class ProgramBean {
 	public void setName(String name) {
 		Name = name;
 	}
-
+	
+	public int getDynasty(){
+		return Dynasty;
+	}
+	
+	public void setDynasty(int dynasty){
+		Dynasty=dynasty;
+	}
 	public String getAuthor() {
 		return Author;
 	}

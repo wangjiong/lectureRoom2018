@@ -57,6 +57,8 @@
         </activity>
         <activity android:name="com.lecture.item.activity.MoreAct" >
         </activity>
+        <activity android:name="com.lecture.item.activity.ClassifyAct" >
+        </activity>
     </application>
 
 </manifest>

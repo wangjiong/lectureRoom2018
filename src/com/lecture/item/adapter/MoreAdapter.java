@@ -1,7 +1,6 @@
 package com.lecture.item.adapter;
 
 import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +8,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.lecture.data.DbData;
 import com.lecture.data.ProgramBean;
 import com.lecture.media.R;
 
 public class MoreAdapter extends BaseAdapter {
-	ArrayList<ProgramBean> moreProgram;
+	ArrayList<ProgramBean> morePrograms;
 	private LayoutInflater inflater;
 
-	public MoreAdapter(Context context, ArrayList<ProgramBean> moreProgram) {
-		this.moreProgram = moreProgram;
+	public MoreAdapter(Context context, ArrayList<ProgramBean> morePrograms) {
+		this.morePrograms = morePrograms;
 		inflater = LayoutInflater.from(context);
 	}
 
 	@Override
 	public int getCount() {
 		// TODO 自动生成的方法存根
-		return moreProgram.size();
+		return morePrograms.size();
 	}
 
 	@Override
@@ -54,8 +51,8 @@ public class MoreAdapter extends BaseAdapter {
 		} else {
 			holder = (Holder) convertView.getTag();
 		}
-		holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + moreProgram.get(position).getId() + ".jpg"));
-		holder.textView.setText("《"+moreProgram.get(position).getName()+"》");
+		holder.imageView.setImageDrawable(morePrograms.get(position).image);
+		holder.textView.setText(morePrograms.get(position).getName());
 		return convertView;
 	}
 

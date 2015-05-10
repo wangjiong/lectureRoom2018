@@ -114,6 +114,7 @@ public class RecommendFrag extends Fragment {
 			more_movie_lines[i].setOnClickListener(new OnClickListener() {
 				public void onClick(View view) {
 					Intent intent = new Intent(getActivity(), MoreAct.class);
+					intent.putExtra(Param.MORE_TYPE, j);
 					startActivity(intent);
 				}
 			});

@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
+import com.lecture.item.fragment.ClassifyFrag;
 import com.lecture.item.fragment.ItemFrag;
 import com.lecture.item.fragment.PersonFrag;
 import com.lecture.item.fragment.RecommendFrag;
@@ -15,6 +16,7 @@ import com.lecture.media.R;
 
 public class MainActivity extends Activity implements ItemFrag.Callbacks {
 	RecommendFrag recommendFrag;
+	ClassifyFrag classifyFrag;
 	SearchFrag searchFrag;
 	PersonFrag personFrag;
 	int fragment = 1;
@@ -48,6 +50,14 @@ public class MainActivity extends Activity implements ItemFrag.Callbacks {
 				ft.add(R.id.content, recommendFrag);
 			}
 			break;
+		case 2:
+			if (classifyFrag != null) {
+				ft.show(classifyFrag);
+			} else {
+				classifyFrag = new ClassifyFrag();
+				ft.add(R.id.content, classifyFrag);
+			}
+			break;
 		case 3:
 			if (searchFrag != null) {
 				ft.show(searchFrag);
@@ -71,6 +81,8 @@ public class MainActivity extends Activity implements ItemFrag.Callbacks {
 	public void hideFragments(FragmentTransaction ft) {
 		if (recommendFrag != null)
 			ft.hide(recommendFrag);
+		if (classifyFrag != null)
+			ft.hide(classifyFrag);
 		if (searchFrag != null)
 			ft.hide(searchFrag);
 		if (personFrag != null)

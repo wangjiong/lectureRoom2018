@@ -53,9 +53,10 @@ public class DbData {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
 			programBean.setName(cursor.getString(1));
-			programBean.setAuthor(cursor.getString(2));
-			programBean.setPlayTime(cursor.getInt(3));
-			programBean.setNum((cursor.getInt(4)));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
 			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
 			return programBean;
 		}
@@ -95,9 +96,10 @@ public class DbData {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
 			programBean.setName(cursor.getString(1));
-			programBean.setAuthor(cursor.getString(2));
-			programBean.setPlayTime(cursor.getInt(3));
-			programBean.setNum((cursor.getInt(4)));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
 			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
 			programBeans.add(programBean);
 		}
@@ -113,9 +115,10 @@ public class DbData {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
 			programBean.setName(cursor.getString(1));
-			programBean.setAuthor(cursor.getString(2));
-			programBean.setPlayTime(cursor.getInt(3));
-			programBean.setNum((cursor.getInt(4)));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
 			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
 			programBeans.add(programBean);
 		}
@@ -131,27 +134,65 @@ public class DbData {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
 			programBean.setName(cursor.getString(1));
-			programBean.setAuthor(cursor.getString(2));
-			programBean.setPlayTime(cursor.getInt(3));
-			programBean.setNum((cursor.getInt(4)));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
 			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
 			programBeans.add(programBean);
 		}
 		return programBeans;
 	}
-	
-	//更多
+
+	// 更多
 	@SuppressWarnings("deprecation")
-	public static ArrayList<ProgramBean> getProgramBeansMore() {
+	public static ArrayList<ProgramBean> getProgramBeansMore(int type) {
+		int moreType = 2010;
+		switch (type) {
+		case 0:
+			moreType = 2010;
+			break;
+		case 1:
+			moreType = 2011;
+			break;
+		default:
+			moreType = 2011;
+		}
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
-		Cursor cursor = db.rawQuery("select * from program", null);
+		Cursor cursor = db.rawQuery("select * from program where PlayTime = ? ", new String[] { moreType + "" });
 		while (cursor.moveToNext()) {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
 			programBean.setName(cursor.getString(1));
-			programBean.setAuthor(cursor.getString(2));
-			programBean.setPlayTime(cursor.getInt(3));
-			programBean.setNum((cursor.getInt(4)));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
+			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
+			programBeans.add(programBean);
+		}
+		return programBeans;
+	}
+
+	// 分类
+	@SuppressWarnings("deprecation")
+	public static ArrayList<ProgramBean> getProgramBeansClassify(int classifyType) {
+		classifyType -= 1;// 与数据库数据相一致
+		if (classifyType == -1) {
+			classifyType = 14;
+		} else if (classifyType == 0) {
+			classifyType = 15;
+		}
+		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
+		Cursor cursor = db.rawQuery("select * from program where Dynasty = ? ", new String[] { classifyType + "" });
+		while (cursor.moveToNext()) {
+			ProgramBean programBean = new ProgramBean();
+			programBean.setId(cursor.getString(0));
+			programBean.setName(cursor.getString(1));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
 			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
 			programBeans.add(programBean);
 		}
@@ -160,10 +201,10 @@ public class DbData {
 
 	// 搜索
 	public static List<String> getSearchStrings() {
-		List<String> searchStrings=new ArrayList<String>();
-		Cursor cursor = db.rawQuery("select NAME from program where PlayTime=2011 LIMIT ?", new String[]{KeywordsView.MAX+""});
-		while (cursor.moveToNext()){
-			searchStrings.add("《"+cursor.getString(0)+"》");
+		List<String> searchStrings = new ArrayList<String>();
+		Cursor cursor = db.rawQuery("select NAME from program where PlayTime=2011 LIMIT ?", new String[] { KeywordsView.MAX + "" });
+		while (cursor.moveToNext()) {
+			searchStrings.add("《" + cursor.getString(0) + "》");
 		}
 		return searchStrings;
 	}

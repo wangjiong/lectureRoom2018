@@ -25,7 +25,10 @@ public class MoreAct extends Activity {
 	GridView gridView;
 
 	private void initData() {
-		morePrograms = DbData.getProgramBeansMore();
+		morePrograms = DbData.getProgramBeansMore(getIntent().getExtras().getInt(Param.MORE_TYPE));
+		for (int i = 0; i < morePrograms.size(); i++) {
+			morePrograms.get(i).setName("《" + morePrograms.get(i).getName() + "》");
+		}
 	}
 
 	@Override
@@ -43,7 +46,6 @@ public class MoreAct extends Activity {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO 自动生成的方法存根
 				Intent intent = new Intent(MoreAct.this, MovieIntroAct.class);
 				intent.putExtra(Param.MOVIE_KEY, morePrograms.get(arg2).getId());
 				startActivity(intent);
