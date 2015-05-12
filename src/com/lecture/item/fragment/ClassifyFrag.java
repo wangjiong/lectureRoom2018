@@ -24,7 +24,7 @@ import com.lecture.util.Util;
 public class ClassifyFrag extends Fragment {
 	// 数据
 	ArrayList<ProgramBean> morePrograms = new ArrayList<ProgramBean>();
-	String[] texts = new String[] { "排行版", "经典荟萃", "夏商周", "春秋战国", "秦", "汉", "三国", "魏晋", "隋", "唐", "宋", "元", "明", "清", "近代" };
+	String[] texts = new String[] { "排行版", "经典荟萃", "夏商周", "春秋战国", "秦", "汉", "三国", "晋", "隋", "唐", "宋", "元", "明", "清", "近代" };
 	int[] images = new int[] { R.drawable.c14, R.drawable.c15, R.drawable.c01, R.drawable.c02, R.drawable.c03, R.drawable.c04, R.drawable.c05, R.drawable.c06, R.drawable.c07, R.drawable.c08, R.drawable.c09, R.drawable.c10, R.drawable.c11, R.drawable.c12, R.drawable.c13 };
 	// 布局
 	GridView gridView;

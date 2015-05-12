@@ -1,6 +1,7 @@
 package com.lecture.item.activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.lecture.data.DbData;
 import com.lecture.data.ProgramBean;
@@ -29,6 +30,7 @@ public class ClassifyAct extends Activity {
 		for (int i = 0; i < classifyPrograms.size(); i++) {
 			classifyPrograms.get(i).setName("¡¶" + classifyPrograms.get(i).getName() + "¡·");
 		}
+		Collections.reverse(classifyPrograms);
 	}
 	
 	@Override

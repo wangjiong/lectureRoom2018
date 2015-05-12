@@ -2,8 +2,10 @@ package com.lecture.item.view;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import net.tsz.afinal.FinalHttp;
@@ -27,6 +29,7 @@ import com.lecture.item.activity.PersonDownloadAct;
 import com.lecture.media.R;
 
 public class MyMediaControllerView extends MediaController {
+	public static List<String> sDownloading = new ArrayList<String>(); // 防止同时重复下载一个文件
 	// 数据
 	private UnitBean unitBean;
 	private String[] Urls;
@@ -67,16 +70,15 @@ public class MyMediaControllerView extends MediaController {
 		// 下载事件
 		download.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (isDownload) {
+				if (isDownload || sDownloading.contains(unitBean.getTitle() + unitBean.getEpisode())) {
 					Toast.makeText(mActivity, "正在下载", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				Toast.makeText(mActivity, "开始下载", Toast.LENGTH_SHORT).show();
 				// 创建文件夹
 				file = DbData.createDownload(unitBean);
 				if (file.listFiles() != null) {
 					segment = file.listFiles().length;
-					if(segment==0)
+					if (segment == 0)
 						segment++;
 					if (segment == unitBean.getSegment()) {
 						Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
@@ -87,6 +89,8 @@ public class MyMediaControllerView extends MediaController {
 							f.delete();
 					}
 				}
+				Toast.makeText(mActivity, "开始下载", Toast.LENGTH_SHORT).show();
+				sDownloading.add(unitBean.getTitle() + unitBean.getEpisode());
 				download();
 				isDownload = true;
 			}
@@ -120,6 +124,7 @@ public class MyMediaControllerView extends MediaController {
 						PersonDownloadAct.downloadBeans = DbData.readDownload();
 						Collections.reverse(PersonDownloadAct.downloadBeans);
 						PersonDownloadAct.adapter.notifyDataSetChanged();
+						sDownloading.remove(unitBean.getTitle() + unitBean.getEpisode());
 					}
 					isDownload = false;
 				}

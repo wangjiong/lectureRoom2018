@@ -25,16 +25,16 @@ import android.widget.Toast;
 
 import com.lecture.data.DbData;
 import com.lecture.data.DownloadBean;
-import com.lecture.item.view.MyMediaControllerDownloadView;
+import com.lecture.data.UnitBean;
+import com.lecture.item.view.MyMediaControllerView;
 import com.lecture.media.R;
 
-public class MovieDownloadAct extends Activity implements
-		OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener,
-		OnVideoSizeChangedListener, SurfaceHolder.Callback, MediaPlayerControl,
-		OnErrorListener, OnInfoListener {
+public class MovieDownloadAct extends Activity implements OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback, MediaPlayerControl, OnErrorListener, OnInfoListener {
 	// 数据
 	private DownloadBean downloadBean;
-	private String[] Urls;
+	private UnitBean unitBean;
+	private String[] Urls; // 网络存放的位置
+	private String[] localUrls;// 本地存放的位置
 	// 布局
 	private int mVideoWidth;
 	private int mVideoHeight;
@@ -45,7 +45,7 @@ public class MovieDownloadAct extends Activity implements
 	private boolean mIsVideoReadyToBePlayed = false;
 
 	private Display currentDisplay;
-	private MyMediaControllerDownloadView controller;
+	private MyMediaControllerView controller;
 	private ProgressDialog progressDialog;
 	private boolean mIsVideoError = false;
 	private boolean mIsVideofirst = true;
@@ -61,7 +61,17 @@ public class MovieDownloadAct extends Activity implements
 
 	private void initData() {
 		downloadBean = PersonDownloadAct.downloadBean;
-		Urls = PersonDownloadAct.Urls;
+		unitBean = DbData.getUnitBeanByTitleAndEpisode(downloadBean.getTitle(), Integer.parseInt(downloadBean.getEpisode()));
+		Urls = new String[unitBean.getSegment()];
+		String s = unitBean.getUrl();
+		for (int i = 0; i < Urls.length; i++) {
+			if (i < 9) {
+				Urls[i] = s + "00" + (i + 1) + ".mp4";
+			} else {
+				Urls[i] = s + "0" + (i + 1) + ".mp4";
+			}
+		}
+		localUrls = PersonDownloadAct.Urls;
 	}
 
 	private void initView() {
@@ -71,13 +81,13 @@ public class MovieDownloadAct extends Activity implements
 		holder.addCallback(this);
 		holder.setFormat(PixelFormat.RGBA_8888);
 		currentDisplay = getWindowManager().getDefaultDisplay();
-		controller = new MyMediaControllerDownloadView(this,downloadBean);
+		controller = new MyMediaControllerView(this, unitBean , Urls);
 		// 对话框
 		progressDialog = new ProgressDialog(MovieDownloadAct.this);
 		progressDialog.setTitle(null);
 		progressDialog.setMessage("曲有误,周郎顾");
 		progressDialog.setCancelable(false);
-		progressDialog.setOnKeyListener(onKeyListener);
+		// progressDialog.setOnKeyListener(onKeyListener); 暂时去掉已下载的监听器
 		progressDialog.show();
 	}
 
@@ -100,7 +110,7 @@ public class MovieDownloadAct extends Activity implements
 		doCleanUp();
 		try {
 			mMediaPlayer = new MediaPlayer(this);
-			mMediaPlayer.setDataSegments(Urls, DbData.fileCache.toString());
+			mMediaPlayer.setDataSegments(localUrls, DbData.fileCache.toString());
 			mMediaPlayer.setDisplay(holder);
 			mMediaPlayer.prepareAsync();
 			mMediaPlayer.setOnPreparedListener(this);
@@ -180,41 +190,28 @@ public class MovieDownloadAct extends Activity implements
 	private void startVideoPlayback() {
 		mVideoWidth = mMediaPlayer.getVideoWidth();
 		mVideoHeight = mMediaPlayer.getVideoHeight();
-		if (mVideoWidth > currentDisplay.getWidth()
-				|| mVideoHeight > currentDisplay.getHeight()) {
-			float heightRatio = (float) mVideoHeight
-					/ (float) currentDisplay.getHeight();
-			float widthRatio = (float) mVideoWidth
-					/ (float) currentDisplay.getWidth();
+		if (mVideoWidth > currentDisplay.getWidth() || mVideoHeight > currentDisplay.getHeight()) {
+			float heightRatio = (float) mVideoHeight / (float) currentDisplay.getHeight();
+			float widthRatio = (float) mVideoWidth / (float) currentDisplay.getWidth();
 			if (heightRatio > 1 || widthRatio > 1) {
 				if (heightRatio > widthRatio) {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) heightRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) heightRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) heightRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) heightRatio);
 				} else {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) widthRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) widthRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) widthRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) widthRatio);
 				}
 			}
 		} else {
-			float heightRatio = (float) mVideoHeight
-					/ (float) currentDisplay.getHeight();
-			float widthRatio = (float) mVideoWidth
-					/ (float) currentDisplay.getWidth();
+			float heightRatio = (float) mVideoHeight / (float) currentDisplay.getHeight();
+			float widthRatio = (float) mVideoWidth / (float) currentDisplay.getWidth();
 			if (heightRatio < 1 || widthRatio < 1) {
 				if (heightRatio > widthRatio) {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) heightRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) heightRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) heightRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) heightRatio);
 				} else {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) widthRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) widthRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) widthRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) widthRatio);
 				}
 			}
 		}
@@ -228,8 +225,7 @@ public class MovieDownloadAct extends Activity implements
 	}
 
 	private void error() {
-		Toast.makeText(MovieDownloadAct.this, "视频加载错误,请检查网络", Toast.LENGTH_LONG)
-				.show();
+		Toast.makeText(MovieDownloadAct.this, "视频加载错误,请检查网络", Toast.LENGTH_LONG).show();
 		if (progressDialog != null && progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}

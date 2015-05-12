@@ -87,11 +87,45 @@ public class DbData {
 		return null;
 	}
 
+	// 推荐
+	@SuppressWarnings("deprecation")
+	public static ArrayList<ProgramBean> getProgramBeansRecommend(int type) {
+		String IdString = null;
+		switch (type) {
+		case 0:
+			IdString = "Id=20100124 or Id=20100130 or Id=20100914 or Id=20121111 or Id=20121113 or Id=20121024 or Id=20110909 or Id=20100928 or Id=20121115";
+			break;
+		case 1:
+			IdString = "Id=20100730 or Id=20100813 or Id=20100821";
+			break;
+		case 2:
+			IdString = "Id=20110614 or Id=20110619 or Id=20110628";
+			break;
+		case 3:
+			IdString = "Id=20110122 or Id=20110208 or Id=20110213 or Id=20110217 or Id=20110221";
+			break;
+		}
+		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
+		Cursor cursor = db.rawQuery("select * from program where " + IdString, null);
+		while (cursor.moveToNext()) {
+			ProgramBean programBean = new ProgramBean();
+			programBean.setId(cursor.getString(0));
+			programBean.setName(cursor.getString(1));
+			programBean.setDynasty(cursor.getInt(2));
+			programBean.setAuthor(cursor.getString(3));
+			programBean.setPlayTime(cursor.getInt(4));
+			programBean.setNum((cursor.getInt(5)));
+			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
+			programBeans.add(programBean);
+		}
+		return programBeans;
+	}
+
 	// 今日热播
 	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansToday() {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
-		Cursor cursor = db.rawQuery("select * from program where PlayTime=2011", null);
+		Cursor cursor = db.rawQuery("select * from program where PlayTime=2012", null);
 		while (cursor.moveToNext()) {
 			ProgramBean programBean = new ProgramBean();
 			programBean.setId(cursor.getString(0));
@@ -150,13 +184,13 @@ public class DbData {
 		int moreType = 2010;
 		switch (type) {
 		case 0:
-			moreType = 2010;
+			moreType = 2012;
 			break;
 		case 1:
 			moreType = 2011;
 			break;
 		default:
-			moreType = 2011;
+			moreType = 2010;
 		}
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where PlayTime = ? ", new String[] { moreType + "" });

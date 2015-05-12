@@ -59,16 +59,20 @@ public final class R {
         public static final int power03=0x7f02001d;
         public static final int power04=0x7f02001e;
         public static final int pulltorefresh=0x7f02001f;
-        public static final int scrubber_control_disabled_holo=0x7f020020;
-        public static final int scrubber_control_focused_holo=0x7f020021;
-        public static final int scrubber_control_normal_holo=0x7f020022;
-        public static final int scrubber_control_pressed_holo=0x7f020023;
-        public static final int scrubber_control_selector_holo=0x7f020024;
-        public static final int scrubber_primary_holo=0x7f020025;
-        public static final int scrubber_progress_horizontal_holo_dark=0x7f020026;
-        public static final int scrubber_secondary_holo=0x7f020027;
-        public static final int scrubber_track_holo_dark=0x7f020028;
-        public static final int search=0x7f020029;
+        public static final int r01=0x7f020020;
+        public static final int r02=0x7f020021;
+        public static final int r03=0x7f020022;
+        public static final int r04=0x7f020023;
+        public static final int scrubber_control_disabled_holo=0x7f020024;
+        public static final int scrubber_control_focused_holo=0x7f020025;
+        public static final int scrubber_control_normal_holo=0x7f020026;
+        public static final int scrubber_control_pressed_holo=0x7f020027;
+        public static final int scrubber_control_selector_holo=0x7f020028;
+        public static final int scrubber_primary_holo=0x7f020029;
+        public static final int scrubber_progress_horizontal_holo_dark=0x7f02002a;
+        public static final int scrubber_secondary_holo=0x7f02002b;
+        public static final int scrubber_track_holo_dark=0x7f02002c;
+        public static final int search=0x7f02002d;
     }
     public static final class id {
         public static final int MainView=0x7f0a0011;

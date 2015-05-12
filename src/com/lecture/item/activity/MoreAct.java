@@ -25,7 +25,13 @@ public class MoreAct extends Activity {
 	GridView gridView;
 
 	private void initData() {
-		morePrograms = DbData.getProgramBeansMore(getIntent().getExtras().getInt(Param.MORE_TYPE));
+		int moreType=getIntent().getExtras().getInt(Param.MORE_TYPE);
+		int recommmnedType=getIntent().getExtras().getInt(Param.RECOMMEND_TYPE);
+		if(moreType!=-1){//从更多过来的数据
+			morePrograms = DbData.getProgramBeansMore(moreType);
+		}else{//从推荐过来数据
+			morePrograms = DbData.getProgramBeansRecommend(recommmnedType);
+		}
 		for (int i = 0; i < morePrograms.size(); i++) {
 			morePrograms.get(i).setName("《" + morePrograms.get(i).getName() + "》");
 		}

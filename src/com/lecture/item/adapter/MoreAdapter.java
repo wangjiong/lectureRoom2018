@@ -12,11 +12,23 @@ import com.lecture.data.ProgramBean;
 import com.lecture.media.R;
 
 public class MoreAdapter extends BaseAdapter {
-	ArrayList<ProgramBean> morePrograms;
+	ArrayList<ProgramBean> morePrograms = new ArrayList<ProgramBean>();
 	private LayoutInflater inflater;
 
 	public MoreAdapter(Context context, ArrayList<ProgramBean> morePrograms) {
-		this.morePrograms = morePrograms;
+		for (int i = 0; i < morePrograms.size(); i++) {
+			boolean isHasSame = false;
+			for (int j = 0; j < this.morePrograms.size(); j++) {
+				System.out.println(this.morePrograms.get(j).getName()+" "+morePrograms.get(j).getName());
+				if (this.morePrograms.get(j).getName().equals(morePrograms.get(i).getName())) {
+					isHasSame = true;
+					break;
+				}
+			}
+			if (!isHasSame) {
+				this.morePrograms.add(morePrograms.get(i));
+			}
+		}
 		inflater = LayoutInflater.from(context);
 	}
 

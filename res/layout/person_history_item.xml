@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/image_intro"
         android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:layout_margin="5dp"
         android:scaleType="fitXY"
         android:src="@drawable/movie" />

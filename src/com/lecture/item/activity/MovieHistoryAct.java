@@ -29,10 +29,7 @@ import com.lecture.data.UnitBean;
 import com.lecture.item.view.MyMediaControllerView;
 import com.lecture.media.R;
 
-public class MovieHistoryAct extends Activity implements
-		OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener,
-		OnVideoSizeChangedListener, SurfaceHolder.Callback, MediaPlayerControl,
-		OnErrorListener, OnInfoListener {
+public class MovieHistoryAct extends Activity implements OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener, SurfaceHolder.Callback, MediaPlayerControl, OnErrorListener, OnInfoListener {
 	//  ˝æ›
 	private UnitBean unitBean;
 	private String[] Urls;
@@ -64,7 +61,7 @@ public class MovieHistoryAct extends Activity implements
 	}
 
 	private void initData() {
-		unitBean = DbData.getUnitBeanByTitleAndEpisode(PersonHistoryAct.historyBean.getTitle(),Integer.parseInt(PersonHistoryAct.historyBean.getEpisode()));
+		unitBean = DbData.getUnitBeanByTitleAndEpisode(PersonHistoryAct.historyBean.getTitle(), Integer.parseInt(PersonHistoryAct.historyBean.getEpisode()));
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();
 		for (int i = 0; i < Urls.length; i++) {
@@ -83,7 +80,7 @@ public class MovieHistoryAct extends Activity implements
 		holder.addCallback(this);
 		holder.setFormat(PixelFormat.RGBA_8888);
 		currentDisplay = getWindowManager().getDefaultDisplay();
-		controller = new MyMediaControllerView(this,unitBean, Urls);
+		controller = new MyMediaControllerView(this, unitBean, Urls);
 		// ∂‘ª∞øÚ
 		progressDialog = new ProgressDialog(MovieHistoryAct.this);
 		progressDialog.setTitle(null);
@@ -194,41 +191,28 @@ public class MovieHistoryAct extends Activity implements
 	private void startVideoPlayback() {
 		mVideoWidth = mMediaPlayer.getVideoWidth();
 		mVideoHeight = mMediaPlayer.getVideoHeight();
-		if (mVideoWidth > currentDisplay.getWidth()
-				|| mVideoHeight > currentDisplay.getHeight()) {
-			float heightRatio = (float) mVideoHeight
-					/ (float) currentDisplay.getHeight();
-			float widthRatio = (float) mVideoWidth
-					/ (float) currentDisplay.getWidth();
+		if (mVideoWidth > currentDisplay.getWidth() || mVideoHeight > currentDisplay.getHeight()) {
+			float heightRatio = (float) mVideoHeight / (float) currentDisplay.getHeight();
+			float widthRatio = (float) mVideoWidth / (float) currentDisplay.getWidth();
 			if (heightRatio > 1 || widthRatio > 1) {
 				if (heightRatio > widthRatio) {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) heightRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) heightRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) heightRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) heightRatio);
 				} else {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) widthRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) widthRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) widthRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) widthRatio);
 				}
 			}
 		} else {
-			float heightRatio = (float) mVideoHeight
-					/ (float) currentDisplay.getHeight();
-			float widthRatio = (float) mVideoWidth
-					/ (float) currentDisplay.getWidth();
+			float heightRatio = (float) mVideoHeight / (float) currentDisplay.getHeight();
+			float widthRatio = (float) mVideoWidth / (float) currentDisplay.getWidth();
 			if (heightRatio < 1 || widthRatio < 1) {
 				if (heightRatio > widthRatio) {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) heightRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) heightRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) heightRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) heightRatio);
 				} else {
-					mVideoHeight = (int) Math.ceil((float) mVideoHeight
-							/ (float) widthRatio);
-					mVideoWidth = (int) Math.ceil((float) mVideoWidth
-							/ (float) widthRatio);
+					mVideoHeight = (int) Math.ceil((float) mVideoHeight / (float) widthRatio);
+					mVideoWidth = (int) Math.ceil((float) mVideoWidth / (float) widthRatio);
 				}
 			}
 		}
@@ -243,8 +227,7 @@ public class MovieHistoryAct extends Activity implements
 	}
 
 	private void error() {
-		Toast.makeText(MovieHistoryAct.this, " ”∆µº”‘ÿ¥ÌŒÛ,«ÎºÏ≤ÈÕ¯¬Á", Toast.LENGTH_LONG)
-				.show();
+		Toast.makeText(MovieHistoryAct.this, " ”∆µº”‘ÿ¥ÌŒÛ,«ÎºÏ≤ÈÕ¯¬Á", Toast.LENGTH_LONG).show();
 		if (progressDialog != null && progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
@@ -334,8 +317,7 @@ public class MovieHistoryAct extends Activity implements
 	private OnKeyListener onKeyListener = new OnKeyListener() {
 		@Override
 		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-			if (keyCode == KeyEvent.KEYCODE_BACK
-					&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
 				progressDialog.dismiss();
 				finish();
 			}
