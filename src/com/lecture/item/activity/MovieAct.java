@@ -66,10 +66,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		unitBean = DbData.getUnitBeanByTitleAndEpisode(MovieIntroAct.programBean.getName(), episode);
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();
-		System.out.println(s);
-		System.out.println(s.charAt(s.length() - 1));
 		if (s.charAt(s.length() - 1)=='_') {//视频url的两种形式'_'和'-'
-			System.out.println("1");
 			for (int i = 0; i < Urls.length; i++) {
 				if (i < 9) {
 					Urls[i] = s + "00" + (i + 1) + ".mp4";
@@ -78,7 +75,6 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 				}
 			}
 		} else if (s.charAt(s.length() - 1) == '-') {
-			System.out.println("2");
 			for (int i = 0; i < Urls.length; i++) {
 				Urls[i] = s + (i + 1) + ".mp4";
 			}

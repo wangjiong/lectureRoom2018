@@ -20,20 +20,27 @@ import com.lecture.util.Util;
 
 public class MoreAct extends Activity {
 	// 数据
-	ArrayList<ProgramBean> morePrograms;
+	ArrayList<ProgramBean> programBeans;
 	// 布局
 	GridView gridView;
 
 	private void initData() {
 		int moreType=getIntent().getExtras().getInt(Param.MORE_TYPE);
 		int recommmnedType=getIntent().getExtras().getInt(Param.RECOMMEND_TYPE);
+		String authorType=getIntent().getExtras().getString(Param.AUTHOR_TYPE);
+		String timeType=getIntent().getExtras().getString(Param.TIME_TYPE);
 		if(moreType!=-1){//从更多过来的数据
-			morePrograms = DbData.getProgramBeansMore(moreType);
-		}else{//从推荐过来数据
-			morePrograms = DbData.getProgramBeansRecommend(recommmnedType);
+			programBeans = DbData.getProgramBeansMore(moreType);
+		}else if(recommmnedType!=-1){//从推荐过来数据
+			programBeans = DbData.getProgramBeansRecommend(recommmnedType);
+		}else if(authorType!=null){
+			programBeans=DbData.getProgramBeansByAuthor(authorType);
+		}else if(timeType!=null){
+			System.out.println(timeType);
+			programBeans=DbData.getProgramBeansByTime(timeType);
 		}
-		for (int i = 0; i < morePrograms.size(); i++) {
-			morePrograms.get(i).setName("《" + morePrograms.get(i).getName() + "》");
+		for (int i = 0; i < programBeans.size(); i++) {
+			programBeans.get(i).setName("《" + programBeans.get(i).getName() + "》");
 		}
 	}
 
@@ -47,13 +54,13 @@ public class MoreAct extends Activity {
 		gridView.setVerticalSpacing(Util.dip2px(this, 10));
 		gridView.setColumnWidth(10);
 		gridView.setSelector(new ColorDrawable(Color.BLACK));
-		gridView.setAdapter(new MoreAdapter(this, morePrograms));
+		gridView.setAdapter(new MoreAdapter(this, programBeans));
 		this.setContentView(gridView);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(MoreAct.this, MovieIntroAct.class);
-				intent.putExtra(Param.MOVIE_KEY, morePrograms.get(arg2).getId());
+				intent.putExtra(Param.MOVIE_KEY, programBeans.get(arg2).getId());
 				startActivity(intent);
 			}
 		});

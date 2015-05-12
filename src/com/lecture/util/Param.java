@@ -6,4 +6,6 @@ public class Param {
 	public static final String MORE_TYPE = "com.lecture.media.more";
 	public static final String RECOMMEND_TYPE = "com.lecture.media.recommend";
 	public static final String CLASSIFY_TYPE = "com.lecture.media.classify";
+	public static final String AUTHOR_TYPE = "com.lecture.media.author";
+	public static final String TIME_TYPE = "com.lecture.media.time";
 }

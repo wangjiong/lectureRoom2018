@@ -2,7 +2,6 @@ package com.lecture.item.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,29 +17,27 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.lecture.data.DbData;
+import com.lecture.item.activity.MoreAct;
 import com.lecture.item.activity.MovieIntroAct;
 import com.lecture.item.view.KeywordsView;
 import com.lecture.media.R;
 import com.lecture.util.Param;
 
 public class SearchFrag extends Fragment implements View.OnClickListener {
+	// 搜索类型
+	private int searchType = 0;// 0代表按名字 1代表按作者 2代表按年份
 	private String[] totalKeys = null;
 	private String[] key_words = new String[18];
-	private boolean isHasChild = true;
 	private String[] movie_texts = (String[]) DbData.getSearchStrings().toArray(new String[0]);
 	private KeywordsView showKeywords = null;
-	private LinearLayout searchLayout = null;
 	private GestureDetector gestureDetector;
-	private boolean isOutter;
 
 	EditText search_text = null;
 	Button search_button = null;
-	TextView search_back = null;
+	TextView searchTypeTextView = null;
 
 	@SuppressWarnings("deprecation")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,30 +47,61 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 		search_button.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				String text = (search_text.getText()).toString().trim();
-				Intent intent = new Intent(getActivity(), MovieIntroAct.class);
-				String id = DbData.getProgramBeanIdByUnitBeanTitle(text.substring(1, text.length() - 1));
-				if (id != null) {
-					intent.putExtra(Param.MOVIE_KEY, id);
+				if (text.equals("")) {
+					Toast.makeText(getActivity(), "输入内容不能为空哦！", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (searchType == 0) {// 名字
+					if (text.length() > 2) {
+						String id = DbData.getProgramBeanIdByTitle(text.substring(1, text.length() - 1));
+						if (id != null) {
+							Intent intent = new Intent(getActivity(), MovieIntroAct.class);
+							intent.putExtra(Param.MOVIE_KEY, id);
+							startActivity(intent);
+						} else {
+							Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
+						}
+					} else {
+						Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
+					}
+				}
+				if (searchType == 1) {// 作者
+					Intent intent = new Intent(getActivity(), MoreAct.class);
+					intent.putExtra(Param.AUTHOR_TYPE, text);
+					intent.putExtra(Param.RECOMMEND_TYPE, -1);
+					intent.putExtra(Param.MORE_TYPE, -1);
 					startActivity(intent);
-				} else {
-					Toast.makeText(getActivity(),"抱歉！没有找到", Toast.LENGTH_SHORT).show();
+				}
+				if (searchType == 2) {// 年份
+					Intent intent = new Intent(getActivity(), MoreAct.class);
+					intent.putExtra(Param.TIME_TYPE, text);
+					intent.putExtra(Param.RECOMMEND_TYPE, -1);
+					intent.putExtra(Param.MORE_TYPE, -1);
+					startActivity(intent);
 				}
 			}
 		});
-		search_back = (TextView) view.findViewById(R.id.search_back);
-		search_back.setOnClickListener(new OnClickListener() {
+		searchTypeTextView = (TextView) view.findViewById(R.id.search_back);
+		searchTypeTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				search_text.setText("");
-				handler.sendEmptyMessage(Msg_Start_Load);
-				if (isHasChild == false) {
-					searchLayout.addView(showKeywords);
-					isOutter = true;
-					isHasChild = true;
+				if(searchType==0){
+					searchTypeTextView.setText("作者");
+					searchType=1;
+					return;
+				}
+				if(searchType==1){
+					searchTypeTextView.setText("时间");
+					searchType=2;
+					return;
+				}
+				if(searchType==2){
+					searchTypeTextView.setText("名称");
+					searchType=0;
+					return;
 				}
 			}
 		});
-		searchLayout = (LinearLayout) view.findViewById(R.id.searchContent);
 		showKeywords = (KeywordsView) view.findViewById(R.id.word);
 		showKeywords.setDuration(2000l);
 		showKeywords.setOnClickListener(this);
@@ -84,7 +112,6 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 				return gestureDetector.onTouchEvent(event); // 注册点击事件
 			}
 		});
-		isOutter = true;
 		handler.sendEmptyMessage(Msg_Start_Load);
 		return view;
 	}
@@ -207,15 +234,7 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (isOutter) {
-			isOutter = false;
-			String kw = ((TextView) v).getText().toString();
-			if (!kw.trim().equals("")) {
-				searchLayout.removeAllViews();
-				isHasChild = false;
-			}
-			search_text.setText(kw);
-		}
-
+		String kw = ((TextView) v).getText().toString();
+		search_text.setText(kw);
 	}
 }

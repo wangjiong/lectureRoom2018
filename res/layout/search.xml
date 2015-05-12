@@ -16,7 +16,9 @@
             android:id="@+id/search_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="返回"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="名称"
             android:textSize="20sp" />
 
         <LinearLayout

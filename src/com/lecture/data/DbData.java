@@ -45,20 +45,24 @@ public class DbData {
 		}
 	}
 
-	// 通过ID获得ProgramBean
 	@SuppressWarnings("deprecation")
+	private static ProgramBean getProgramBeanByCursor(Cursor cursor) {
+		ProgramBean programBean = new ProgramBean();
+		programBean.setId(cursor.getString(0));
+		programBean.setName(cursor.getString(1));
+		programBean.setDynasty(cursor.getInt(2));
+		programBean.setAuthor(cursor.getString(3));
+		programBean.setPlayTime(cursor.getInt(4));
+		programBean.setNum((cursor.getInt(5)));
+		programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
+		return programBean;
+	}
+
+	// 通过ID获得ProgramBean
 	public static ProgramBean getProgramBeanById(String id) {
-		Cursor cursor = db.rawQuery("select * from program where id=" + id, null);
+		Cursor cursor = db.rawQuery("select * from program where Id=" + id, null);
 		if (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			return programBean;
+			return getProgramBeanByCursor(cursor);
 		}
 		return null;
 	}
@@ -80,7 +84,7 @@ public class DbData {
 
 	// 通过UnitBeanTitle获得ProgramBeanId
 	public static String getProgramBeanIdByUnitBeanTitle(String title) {
-		Cursor cursor = db.rawQuery("select ID from program where NAME=?", new String[] { title });
+		Cursor cursor = db.rawQuery("select ID from program where NAME= ?", new String[] { title });
 		if (cursor.moveToNext()) {
 			return cursor.getString(0);
 		}
@@ -88,7 +92,6 @@ public class DbData {
 	}
 
 	// 推荐
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansRecommend(int type) {
 		String IdString = null;
 		switch (type) {
@@ -108,78 +111,42 @@ public class DbData {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where " + IdString, null);
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
 	// 今日热播
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansToday() {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where PlayTime=2012", null);
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
 	// 金典热播
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansHot() {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where id=20110213 or id=20110217 or id=20110221 or id=20110224 or id=20110410 or id=20110420", null);
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
 	// 以往热播
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansAgo() {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where PlayTime=2011", null);
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
 	// 更多
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansMore(int type) {
 		int moreType = 2010;
 		switch (type) {
@@ -195,21 +162,12 @@ public class DbData {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where PlayTime = ? ", new String[] { moreType + "" });
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
 	// 分类
-	@SuppressWarnings("deprecation")
 	public static ArrayList<ProgramBean> getProgramBeansClassify(int classifyType) {
 		classifyType -= 1;// 与数据库数据相一致
 		if (classifyType == -1) {
@@ -219,24 +177,47 @@ public class DbData {
 		}
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where Dynasty = ? ", new String[] { classifyType + "" });
+		if(classifyType==14){
+			cursor = db.rawQuery("select * from program where Id = 20111115 or Id=20120114 or Id=20121219", null);
+		}
 		while (cursor.moveToNext()) {
-			ProgramBean programBean = new ProgramBean();
-			programBean.setId(cursor.getString(0));
-			programBean.setName(cursor.getString(1));
-			programBean.setDynasty(cursor.getInt(2));
-			programBean.setAuthor(cursor.getString(3));
-			programBean.setPlayTime(cursor.getInt(4));
-			programBean.setNum((cursor.getInt(5)));
-			programBean.image = new BitmapDrawable(getImageFromAssetsFile("img" + programBean.getId() + ".jpg"));
-			programBeans.add(programBean);
+			programBeans.add(getProgramBeanByCursor(cursor));
 		}
 		return programBeans;
 	}
 
-	// 搜索
+	// 定向搜索
+	//名称
+	public static String getProgramBeanIdByTitle(String title) {
+		Cursor cursor = db.rawQuery("select ID from program where NAME= ?", new String[] { title });
+		if (cursor.moveToNext()) {
+			return cursor.getString(0);
+		}
+		return null;
+	}
+	//作者
+	public static ArrayList<ProgramBean> getProgramBeansByAuthor(String title) {
+		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
+		Cursor cursor = db.rawQuery("select * from program where Author = ?", new String[] { title });
+		while (cursor.moveToNext()) {
+			programBeans.add(getProgramBeanByCursor(cursor));
+		}
+		return programBeans;
+	}
+	//时间
+	public static ArrayList<ProgramBean> getProgramBeansByTime(String time) {
+		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
+		Cursor cursor = db.rawQuery("select * from program where PlayTime = ?", new String[] { time });
+		while (cursor.moveToNext()) {
+			programBeans.add(getProgramBeanByCursor(cursor));
+		}
+		return programBeans;
+	}
+
+	// 随机搜索
 	public static List<String> getSearchStrings() {
 		List<String> searchStrings = new ArrayList<String>();
-		Cursor cursor = db.rawQuery("select NAME from program where PlayTime=2011 LIMIT ?", new String[] { KeywordsView.MAX + "" });
+		Cursor cursor = db.rawQuery("select NAME from program where PlayTime=2012 Limit ?", new String[] { KeywordsView.MAX + "" });
 		while (cursor.moveToNext()) {
 			searchStrings.add("《" + cursor.getString(0) + "》");
 		}

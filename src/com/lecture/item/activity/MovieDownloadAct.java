@@ -64,11 +64,17 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		unitBean = DbData.getUnitBeanByTitleAndEpisode(downloadBean.getTitle(), Integer.parseInt(downloadBean.getEpisode()));
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();
-		for (int i = 0; i < Urls.length; i++) {
-			if (i < 9) {
-				Urls[i] = s + "00" + (i + 1) + ".mp4";
-			} else {
-				Urls[i] = s + "0" + (i + 1) + ".mp4";
+		if (s.charAt(s.length() - 1)=='_') {//视频url的两种形式'_'和'-'
+			for (int i = 0; i < Urls.length; i++) {
+				if (i < 9) {
+					Urls[i] = s + "00" + (i + 1) + ".mp4";
+				} else {
+					Urls[i] = s + "0" + (i + 1) + ".mp4";
+				}
+			}
+		} else if (s.charAt(s.length() - 1) == '-') {
+			for (int i = 0; i < Urls.length; i++) {
+				Urls[i] = s + (i + 1) + ".mp4";
 			}
 		}
 		localUrls = PersonDownloadAct.Urls;
