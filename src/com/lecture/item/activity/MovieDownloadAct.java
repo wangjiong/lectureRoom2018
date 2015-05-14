@@ -10,13 +10,10 @@ import io.vov.vitamio.MediaPlayer.OnPreparedListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,6 +35,8 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 	// 布局
 	private int mVideoWidth;
 	private int mVideoHeight;
+	private int mVideoWidthTemp;
+	private int mVideoHeightTemp;
 	private MediaPlayer mMediaPlayer;
 	private SurfaceView mPreview;
 	private SurfaceHolder holder;
@@ -64,7 +63,7 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		unitBean = DbData.getUnitBeanByTitleAndEpisode(downloadBean.getTitle(), Integer.parseInt(downloadBean.getEpisode()));
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();
-		if (s.charAt(s.length() - 1)=='_') {//视频url的两种形式'_'和'-'
+		if (s.charAt(s.length() - 1) == '_') {// 视频url的两种形式'_'和'-'
 			for (int i = 0; i < Urls.length; i++) {
 				if (i < 9) {
 					Urls[i] = s + "00" + (i + 1) + ".mp4";
@@ -82,18 +81,17 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 
 	private void initView() {
 		setContentView(R.layout.media);
+		currentDisplay = getWindowManager().getDefaultDisplay();
 		mPreview = (SurfaceView) findViewById(R.id.surface);
 		holder = mPreview.getHolder();
 		holder.addCallback(this);
 		holder.setFormat(PixelFormat.RGBA_8888);
-		currentDisplay = getWindowManager().getDefaultDisplay();
-		controller = new MyMediaControllerView(this, unitBean , Urls);
+		controller = new MyMediaControllerView(this, unitBean, Urls);
 		// 对话框
 		progressDialog = new ProgressDialog(MovieDownloadAct.this);
 		progressDialog.setTitle(null);
-		progressDialog.setMessage("曲有误,周郎顾");
+		progressDialog.setMessage("视频正在拼命加载中...");
 		progressDialog.setCancelable(false);
-		// progressDialog.setOnKeyListener(onKeyListener); 暂时去掉已下载的监听器
 		progressDialog.show();
 	}
 
@@ -221,6 +219,8 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 				}
 			}
 		}
+		mVideoWidthTemp = mVideoWidth;
+		mVideoHeightTemp = mVideoHeight;
 		holder.setFixedSize(mVideoWidth, mVideoHeight);
 		progressDialog.dismiss();
 		mMediaPlayer.start();
@@ -306,9 +306,26 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		mMediaPlayer.start();
 	}
 
+	long last,x,y;
+
+	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+	public boolean onTouchEvent(MotionEvent e) {
+		if (e.getAction() == MotionEvent.ACTION_DOWN) {
+			if ((System.currentTimeMillis() - last) < 300) {
+				System.out.println("onTouchEvent");
+				if (mVideoWidth == mVideoWidthTemp) {
+					mVideoWidth = currentDisplay.getWidth();
+					mVideoHeight = currentDisplay.getHeight();
+					holder.setFixedSize(mVideoWidth, mVideoHeight);
+				} else {
+					mVideoWidth = mVideoWidthTemp;
+					mVideoHeight = mVideoHeightTemp;
+					holder.setFixedSize(mVideoWidth, mVideoHeight);
+				}
+
+			}
+			last = System.currentTimeMillis();
 			if (controller.isShowing()) {
 				controller.hide();
 			} else {
@@ -317,18 +334,6 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		}
 		return false;
 	}
-
-	private OnKeyListener onKeyListener = new OnKeyListener() {
-		@Override
-		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-			if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-				progressDialog.dismiss();
-				finish();
-			}
-			return false;
-		}
-
-	};
 
 	@Override
 	protected void onResume() {

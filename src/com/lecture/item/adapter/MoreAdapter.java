@@ -16,19 +16,7 @@ public class MoreAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 
 	public MoreAdapter(Context context, ArrayList<ProgramBean> morePrograms) {
-		for (int i = 0; i < morePrograms.size(); i++) {
-			boolean isHasSame = false;
-			for (int j = 0; j < this.morePrograms.size(); j++) {
-				System.out.println(this.morePrograms.get(j).getName()+" "+morePrograms.get(j).getName());
-				if (this.morePrograms.get(j).getName().equals(morePrograms.get(i).getName())) {
-					isHasSame = true;
-					break;
-				}
-			}
-			if (!isHasSame) {
-				this.morePrograms.add(morePrograms.get(i));
-			}
-		}
+		this.morePrograms = morePrograms;
 		inflater = LayoutInflater.from(context);
 	}
 

@@ -1,6 +1,7 @@
 package com.lecture.item.activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,10 +34,23 @@ public class MoreAct extends Activity {
 			programBeans = DbData.getProgramBeansMore(moreType);
 		}else if(recommmnedType!=-1){//从推荐过来数据
 			programBeans = DbData.getProgramBeansRecommend(recommmnedType);
-		}else if(authorType!=null){
+		}else if(authorType!=null){	//从搜索过来的数据，作者
 			programBeans=DbData.getProgramBeansByAuthor(authorType);
-		}else if(timeType!=null){
-			System.out.println(timeType);
+			//除去重复的值
+			ArrayList<ProgramBean> tempPrograms = new ArrayList<ProgramBean>();
+			for (int i = 0; i < programBeans.size(); i++) {
+				int j = 0;
+				for (; j < tempPrograms.size(); j++) {
+					if (tempPrograms.get(j).getName().equals(programBeans.get(i).getName())) {
+						break;
+					}
+				}
+				if (j == tempPrograms.size()) {
+					tempPrograms.add(programBeans.get(i));
+				}
+			}
+			programBeans = tempPrograms;
+		}else if(timeType!=null){//从搜索过来的数据，时间
 			programBeans=DbData.getProgramBeansByTime(timeType);
 		}
 		for (int i = 0; i < programBeans.size(); i++) {

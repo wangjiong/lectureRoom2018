@@ -31,8 +31,24 @@ public class ClassifyAct extends Activity {
 			classifyPrograms.get(i).setName("《" + classifyPrograms.get(i).getName() + "》");
 		}
 		Collections.reverse(classifyPrograms);
+		//除去重复的值
+		ArrayList<ProgramBean> tempPrograms = new ArrayList<ProgramBean>();
+		for (int i = 0; i < classifyPrograms.size(); i++) {
+			int j = 0;
+			for (; j < tempPrograms.size(); j++) {
+				if (tempPrograms.get(j).getName().equals(classifyPrograms.get(i).getName())) {
+					tempPrograms.remove(j);
+					tempPrograms.add(classifyPrograms.get(i));
+					break;
+				}
+			}
+			if (j == tempPrograms.size()) {
+				tempPrograms.add(classifyPrograms.get(i));
+			}
+		}
+		classifyPrograms = tempPrograms;
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

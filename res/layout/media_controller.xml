@@ -59,6 +59,7 @@
     <!-- 填充屏幕，不然标题栏位于中间 -->
 
     <RelativeLayout
+        android:id="@+id/media_controller_RelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
