@@ -21,8 +21,7 @@ public class PersonFrag extends Fragment {
 
 	}
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.item_person, null);
 		view.findViewById(R.id.history).setOnClickListener(new View.OnClickListener() {
 			@Override

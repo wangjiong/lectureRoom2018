@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -17,6 +19,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -43,6 +47,7 @@ public class DbData {
 		if (!createFile()) {
 			Toast.makeText(context, "抱歉，无SD卡！", Toast.LENGTH_SHORT).show();
 		}
+		getNetData();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -94,6 +99,7 @@ public class DbData {
 	// 推荐
 	public static ArrayList<ProgramBean> getProgramBeansRecommend(int type) {
 		String IdString = null;
+//		IdString=recommendId[type];
 		switch (type) {
 		case 0:
 			IdString = "Id=20100124 or Id=20100130 or Id=20100914 or Id=20121111 or Id=20121113 or Id=20121024 or Id=20110909 or Id=20100928 or Id=20121115";
@@ -119,7 +125,7 @@ public class DbData {
 	// 今日热播
 	public static ArrayList<ProgramBean> getProgramBeansToday() {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
-		Cursor cursor = db.rawQuery("select * from program where PlayTime=2012", null);
+		Cursor cursor = db.rawQuery("select * from program where PlayTime=2015", null);
 		while (cursor.moveToNext()) {
 			programBeans.add(getProgramBeanByCursor(cursor));
 		}
@@ -177,7 +183,7 @@ public class DbData {
 		}
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where Dynasty = ? ", new String[] { classifyType + "" });
-		if(classifyType==14){
+		if (classifyType == 14) {
 			cursor = db.rawQuery("select * from program where Id = 20111115 or Id=20120114 or Id=20121219", null);
 		}
 		while (cursor.moveToNext()) {
@@ -187,7 +193,7 @@ public class DbData {
 	}
 
 	// 定向搜索
-	//名称
+	// 名称
 	public static String getProgramBeanIdByTitle(String title) {
 		Cursor cursor = db.rawQuery("select ID from program where NAME= ?", new String[] { title });
 		if (cursor.moveToNext()) {
@@ -195,7 +201,8 @@ public class DbData {
 		}
 		return null;
 	}
-	//作者
+
+	// 作者
 	public static ArrayList<ProgramBean> getProgramBeansByAuthor(String title) {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where Author = ?", new String[] { title });
@@ -204,7 +211,8 @@ public class DbData {
 		}
 		return programBeans;
 	}
-	//时间
+
+	// 时间
 	public static ArrayList<ProgramBean> getProgramBeansByTime(String time) {
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = db.rawQuery("select * from program where PlayTime = ?", new String[] { time });
@@ -372,5 +380,46 @@ public class DbData {
 		}
 		// 目录此时为空，可以删除
 		return dir.delete();
+	}
+
+	// 网络是否可用
+	public static boolean isNetworkConnected(Context context) {
+		if (context != null) {
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+			if (mNetworkInfo != null) {
+				return mNetworkInfo.isAvailable();
+			}
+		}
+		return false;
+	}
+
+	// 推荐数据图片
+	public static String[] recommendUrl = new String[] { "http://192.168.68.149:8080/lecture/r01.jpg", "http://192.168.68.149:8080/lecture/r02.jpg", "http://192.168.68.149:8080/lecture/r03.jpg", "http://192.168.68.149:8080/lecture/r04.jpg", };
+	//请求数据
+	public static String responseString;
+	// 推荐数据Id
+	public static String[] recommendId;
+
+	// 请求推荐数据Id
+	public static void getNetData() {
+		FinalHttp http = new FinalHttp();
+		http.get("http://192.168.68.149:8080/lecture/getNetData.jsp", new AjaxCallBack<String>() {
+			// 当我们请求失败的时候会被调用，errorNo是请求失败之后，服务器的错误码,StrMsg则是错误信息
+			@Override
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				super.onFailure(t, errorNo, strMsg);
+				System.out.println(strMsg);
+			}
+
+			// 如果请求成功，则调用这个回调函数，t就是服务器返回的字符串信息
+			@Override
+			public void onSuccess(String t) {
+				super.onSuccess(t);
+				responseString=t;
+				System.out.println(responseString);
+				recommendId= responseString.split("\\|");//|需要转义，否则无效
+			}
+		});
 	}
 }

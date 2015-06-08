@@ -104,7 +104,7 @@ public class MovieIntroAct extends Activity {
 							bnsProgram[i].setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									if (!isNetworkConnected(MovieIntroAct.this)) {
+									if (!DbData.isNetworkConnected(MovieIntroAct.this)) {
 										Toast.makeText(MovieIntroAct.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
 										return;
 									}
@@ -116,7 +116,7 @@ public class MovieIntroAct extends Activity {
 							});
 						}
 					} else {
-						if (!isNetworkConnected(MovieIntroAct.this)) {
+						if (!DbData.isNetworkConnected(MovieIntroAct.this)) {
 							Toast.makeText(MovieIntroAct.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
 							return;
 						}
@@ -150,7 +150,7 @@ public class MovieIntroAct extends Activity {
 					bnsProgram[i].setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
-							if (!isNetworkConnected(MovieIntroAct.this)) {
+							if (!DbData.isNetworkConnected(MovieIntroAct.this)) {
 								Toast.makeText(MovieIntroAct.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
 								return;
 							}
@@ -164,16 +164,4 @@ public class MovieIntroAct extends Activity {
 			}
 		});
 	}
-
-	private boolean isNetworkConnected(Context context) {
-		if (context != null) {
-			ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-			if (mNetworkInfo != null) {
-				return mNetworkInfo.isAvailable();
-			}
-		}
-		return false;
-	}
-
 }

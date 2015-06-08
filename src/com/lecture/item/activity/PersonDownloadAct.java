@@ -30,7 +30,7 @@ import com.lecture.media.R;
 public class PersonDownloadAct extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	// 数据
 	public static List<DownloadBean> downloadBeans = null;
-	public static MyBaseAdapter adapter=null;
+	public static MyBaseAdapter adapter = null;
 	public static DownloadBean downloadBean = null;
 	public static String[] Urls;
 	// 布局
@@ -47,7 +47,7 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 	private void initData() {
 		downloadBeans = DbData.readDownload();
 		Collections.reverse(downloadBeans);
-		adapter=new MyBaseAdapter();
+		adapter = new MyBaseAdapter();
 	}
 
 	private void initView() {
@@ -65,7 +65,7 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 		});
 	}
 
-	public class MyBaseAdapter extends BaseAdapter{
+	public class MyBaseAdapter extends BaseAdapter {
 		@Override
 		public int getCount() {
 			// TODO 自动生成的方法存根
@@ -98,10 +98,8 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + DbData.getProgramBeanIdByUnitBeanTitle(downloadBeans.get(position).getTitle()) + ".jpg"));
-			holder.textView.setText("名称：《" + downloadBeans.get(position).getTitle()
-					+ "》\n集数：" + downloadBeans.get(position).getEpisode()
-					+ "\n标题：" + downloadBeans.get(position).getName());
-			holder.textViewDownload.setText("\n下载进度：" + downloadBeans.get(position).getDownload()+"%");
+			holder.textView.setText("名称：《" + downloadBeans.get(position).getTitle() + "》\n集数：" + downloadBeans.get(position).getEpisode() + "\n标题：" + downloadBeans.get(position).getName());
+			holder.textViewDownload.setText("\n下载进度：" + downloadBeans.get(position).getDownload() + "%");
 			return convertView;
 		}
 	};
@@ -113,27 +111,25 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		downloadBean = downloadBeans.get(position);
-		File[] files=DbData.fileDownload.listFiles();
-		files=files[files.length-position-1].listFiles();
-		Urls=new String[files.length];
-		for(int i=0;i<files.length;i++){
-			Urls[i]=files[i].toString();
+		File[] files = DbData.fileDownload.listFiles();
+		files = files[files.length - position - 1].listFiles();
+		Urls = new String[files.length];
+		for (int i = 0; i < files.length; i++) {
+			Urls[i] = files[i].toString();
 		}
 		Arrays.sort(Urls);
 		Intent intent = new Intent(this, MovieDownloadAct.class);
 		startActivity(intent);
 	}
-	
+
 	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		dialog(position);
 		return false;
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -141,30 +137,30 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 			initData();
 			listView.setAdapter(adapter);
 			adapter.notifyDataSetChanged();
-		}else{
+		} else {
 			isFirstStart = false;
 		}
 	}
-	
+
 	protected void dialog(final int position) {
 		AlertDialog.Builder builder = new Builder(PersonDownloadAct.this);
-		builder.setMessage("确认要删除吗？");  
-		builder.setTitle("提示"); 
-		builder.setPositiveButton("确认", new OnClickListener() {  
-			  @Override
-			  public void onClick(DialogInterface dialog, int which) {
-				  File[] files=DbData.fileDownload.listFiles();
-				  DbData.deleteDir(files[files.length-position-1]);
-				  downloadBeans.remove(position);
-				  adapter.notifyDataSetChanged();
-			  }
-		  }); 
-		builder.setNegativeButton("取消", new OnClickListener() {   
-			  @Override
-			  public void onClick(DialogInterface dialog, int which) {
-			      dialog.dismiss();
-		   	  }
-		  });  
-		builder.create().show();    
+		builder.setMessage("确认要删除吗？");
+		builder.setTitle("提示");
+		builder.setPositiveButton("确认", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				File[] files = DbData.fileDownload.listFiles();
+				DbData.deleteDir(files[files.length - position - 1]);
+				downloadBeans.remove(position);
+				adapter.notifyDataSetChanged();
+			}
+		});
+		builder.setNegativeButton("取消", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
 	}
 }

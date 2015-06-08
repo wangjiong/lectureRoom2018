@@ -2,6 +2,8 @@ package com.lecture.item.fragment;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.FinalBitmap;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,10 +36,11 @@ public class RecommendFrag extends Fragment {
 	ArrayList<ProgramBean> programHots;// 金典热播
 	ArrayList<ProgramBean> programAgos;// 以往热播
 	ArrayList<ProgramBean> programBeans;// 响应点击事件
+	private FinalBitmap fb = null;
 	// 布局
 	private ArrayList<View> pageViews;// viewPager
 	private ViewPager viewPager;
-	private LinearLayout viewGroup;//point
+	private LinearLayout viewGroup;// point
 	private int[] viewPagerImageId = new int[] { R.drawable.r01, R.drawable.r02, R.drawable.r03, R.drawable.r04 };
 	private ImageView[] viewPagerPoints;
 	private ImageView viewPagerPoint;
@@ -51,20 +54,24 @@ public class RecommendFrag extends Fragment {
 	private TextView movie_text;
 	private int[] contents = { R.id.content1, R.id.content2, R.id.content3, R.id.content4, R.id.content5, R.id.content6 };
 	private ImageView movie_image, movie_images[];// 图片及图片响应
-	
-	private Handler handler = new Handler() {  
-        @Override  
-        public void handleMessage(Message msg) {  
-            super.handleMessage(msg);  
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);  
-        }  
-    };
+
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+		}
+	};
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initData();
 	}
 
 	private void initData() {
+		if (DbData.isNetworkConnected(getActivity())) {
+			fb = FinalBitmap.create(getActivity());
+		}
 		try {
 			programTodays = DbData.getProgramBeansToday();// 今日热播
 			programHots = DbData.getProgramBeansHot();// 金典热播
@@ -84,7 +91,11 @@ public class RecommendFrag extends Fragment {
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			final ImageView imageView = new ImageView(getActivity());
 			imageView.setScaleType(ScaleType.FIT_XY);
-			imageView.setImageResource(viewPagerImageId[i]);
+//			if (fb != null) {
+//				fb.display(imageView, DbData.recommendUrl[i]);
+//			} else {
+				imageView.setImageResource(viewPagerImageId[i]);
+//			}
 			layout.addView(imageView, lp);
 			pageViews.add(layout);
 		}
@@ -108,17 +119,17 @@ public class RecommendFrag extends Fragment {
 		}
 		viewPager.setAdapter(new GuidePageAdapter());
 		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
-		viewPager.setCurrentItem(viewPagerImageId.length*100);
-		// 自动切换页面功能  
-        new Thread(new Runnable() {  
-            @Override  
-            public void run() {  
-                while (true) {  
-                    SystemClock.sleep(5000);  
-                    handler.sendEmptyMessage(0);  
-                }  
-            }  
-        }).start();
+		viewPager.setCurrentItem(viewPagerImageId.length * 100);
+		// 自动切换页面功能
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					SystemClock.sleep(5000);
+					handler.sendEmptyMessage(0);
+				}
+			}
+		}).start();
 		// body
 		more_movie_lines = new TextView[lines.length];// 横线
 		for (int i = 0; i < lines.length; ++i) {
@@ -208,7 +219,7 @@ public class RecommendFrag extends Fragment {
 		}
 
 		@Override
-		public Object instantiateItem(View arg0,final int arg1) {
+		public Object instantiateItem(View arg0, final int arg1) {
 			((ViewPager) arg0).addView(pageViews.get(arg1 % pageViews.size()));
 			pageViews.get(arg1 % pageViews.size()).setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -219,7 +230,7 @@ public class RecommendFrag extends Fragment {
 					startActivity(intent);
 				}
 			});
-			
+
 			return pageViews.get(arg1 % pageViews.size());
 		}
 	}

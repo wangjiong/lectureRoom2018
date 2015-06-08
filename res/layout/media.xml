@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/MainView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
+
     <SurfaceView
         android:id="@+id/surface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" >
     </SurfaceView>
-</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/gesture_volume_layout"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="#333"
+        android:alpha="0.7"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/gesture_iv_player_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/player_volume" />
+
+        <TextView
+            android:id="@+id/geture_tv_volume_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gesture_iv_player_volume"
+            android:layout_centerHorizontal="true"
+            android:gravity="right"
+            android:text="80%"
+            android:textColor="#ffececec" />
+    </RelativeLayout>
+
+</FrameLayout>

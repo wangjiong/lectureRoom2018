@@ -10,14 +10,21 @@ import io.vov.vitamio.MediaPlayer.OnPreparedListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
@@ -35,8 +42,6 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 	// 布局
 	private int mVideoWidth;
 	private int mVideoHeight;
-	private int mVideoWidthTemp;
-	private int mVideoHeightTemp;
 	private MediaPlayer mMediaPlayer;
 	private SurfaceView mPreview;
 	private SurfaceHolder holder;
@@ -48,6 +53,14 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 	private ProgressDialog progressDialog;
 	private boolean mIsVideoError = false;
 	private boolean mIsVideofirst = true;
+	private boolean mIsFullScreen = false;
+
+	private RelativeLayout gesture_volume_layout;// 音量控制布局
+	private TextView geture_tv_volume_percentage;// 音量百分比
+	private ImageView gesture_iv_player_volume;// 音量图标
+	private AudioManager audiomanager;
+	private int maxVolume, currentVolume;
+	WakeLock wakeLock;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -79,6 +92,7 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		localUrls = PersonDownloadAct.Urls;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initView() {
 		setContentView(R.layout.media);
 		currentDisplay = getWindowManager().getDefaultDisplay();
@@ -93,6 +107,16 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		progressDialog.setMessage("视频正在拼命加载中...");
 		progressDialog.setCancelable(false);
 		progressDialog.show();
+		// 声音
+		gesture_volume_layout = (RelativeLayout) findViewById(R.id.gesture_volume_layout);
+		gesture_iv_player_volume = (ImageView) findViewById(R.id.gesture_iv_player_volume);
+		geture_tv_volume_percentage = (TextView) findViewById(R.id.geture_tv_volume_percentage);
+		gesture_iv_player_volume = (ImageView) findViewById(R.id.gesture_iv_player_volume);
+		audiomanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		maxVolume = audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC); // 获取系统最大音量
+		currentVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC); // 获取当前值
+		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,"Movie");
 	}
 
 	public void surfaceChanged(SurfaceHolder surfaceholder, int i, int j, int k) {
@@ -219,9 +243,11 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 				}
 			}
 		}
-		mVideoWidthTemp = mVideoWidth;
-		mVideoHeightTemp = mVideoHeight;
-		holder.setFixedSize(mVideoWidth, mVideoHeight);
+		if (mIsFullScreen) {
+			holder.setFixedSize(currentDisplay.getWidth(), currentDisplay.getHeight());
+		} else {
+			holder.setFixedSize(mVideoWidth, mVideoHeight);
+		}
 		progressDialog.dismiss();
 		mMediaPlayer.start();
 		controller.setMediaPlayer(this);
@@ -306,31 +332,61 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		mMediaPlayer.start();
 	}
 
-	long last,x,y;
+	long last;
+	float moveY;
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
+		// 屏幕大小调节
 		if (e.getAction() == MotionEvent.ACTION_DOWN) {
 			if ((System.currentTimeMillis() - last) < 300) {
-				System.out.println("onTouchEvent");
-				if (mVideoWidth == mVideoWidthTemp) {
-					mVideoWidth = currentDisplay.getWidth();
-					mVideoHeight = currentDisplay.getHeight();
-					holder.setFixedSize(mVideoWidth, mVideoHeight);
+				if (!mIsFullScreen) {
+					holder.setFixedSize(currentDisplay.getWidth(), currentDisplay.getHeight());
+					mIsFullScreen = true;
 				} else {
-					mVideoWidth = mVideoWidthTemp;
-					mVideoHeight = mVideoHeightTemp;
 					holder.setFixedSize(mVideoWidth, mVideoHeight);
+					mIsFullScreen = false;
 				}
 
 			}
 			last = System.currentTimeMillis();
+			moveY = e.getY();
 			if (controller.isShowing()) {
 				controller.hide();
 			} else {
 				controller.show();
 			}
+		}
+		// 声音调节
+		if (e.getAction() == MotionEvent.ACTION_MOVE) {
+			if (Math.abs(e.getY() - moveY) < 5 ) {
+				return false;
+			}
+			gesture_volume_layout.setVisibility(View.VISIBLE);
+			currentVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC); // 获取当前值
+			if (e.getY() < moveY-5) {
+				if (currentVolume < maxVolume) {
+					currentVolume++;
+					moveY=e.getY();
+				}
+				gesture_iv_player_volume.setImageResource(R.drawable.player_volume);
+			} else if (e.getY() > moveY+5){
+				if (currentVolume > 0) {
+					currentVolume--;
+					moveY=e.getY();
+					if (currentVolume == 0) {// 静音，设定静音独有的图片
+						gesture_iv_player_volume.setImageResource(R.drawable.player_silence);
+					}
+				}
+			}
+			moveY=e.getY();
+			int percentage = (currentVolume * 100) / maxVolume;
+			geture_tv_volume_percentage.setText(percentage + "%");
+			audiomanager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+		}
+		if (e.getAction() == MotionEvent.ACTION_UP) {
+			gesture_volume_layout.setVisibility(View.INVISIBLE);
 		}
 		return false;
 	}
@@ -343,6 +399,7 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		} else {
 			controller.show();
 		}
+		wakeLock.acquire();
 	}
 
 	@Override
@@ -357,6 +414,7 @@ public class MovieDownloadAct extends Activity implements OnBufferingUpdateListe
 		if (mIsVideoError) {
 			finish();
 		}
+		wakeLock.release();
 	}
 
 	@Override

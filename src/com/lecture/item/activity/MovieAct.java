@@ -10,17 +10,24 @@ import io.vov.vitamio.MediaPlayer.OnPreparedListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
@@ -38,7 +45,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	private int mVideoWidth;
 	private int mVideoHeight;
 	private MediaPlayer mMediaPlayer;
-	private SurfaceView mPreview;
+	private SurfaceView mSurfaceView;
 	private SurfaceHolder holder;
 	private boolean mIsVideoSizeKnown = false;
 	private boolean mIsVideoReadyToBePlayed = false;
@@ -47,10 +54,19 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	private MyMediaControllerView controller;
 	private ProgressDialog progressDialog;
 	private boolean mIsVideoError = false;
-	private boolean mIsVideofirst = true;
+	private boolean mIsVideoFirst = true;
+	private boolean mIsDialogFirst = true;
 	private boolean mIsCompletion = false;
 	private boolean mIsVideoPlay = false;
+	private boolean mIsFullScreen = false;
 	private int position;
+
+	private RelativeLayout gesture_volume_layout;// 音量控制布局
+	private TextView geture_tv_volume_percentage;// 音量百分比
+	private ImageView gesture_iv_player_volume;// 音量图标
+	private AudioManager audiomanager;
+	private int maxVolume, currentVolume;
+	WakeLock wakeLock;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -66,7 +82,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		unitBean = DbData.getUnitBeanByTitleAndEpisode(MovieIntroAct.programBean.getName(), episode);
 		Urls = new String[unitBean.getSegment()];
 		String s = unitBean.getUrl();
-		if (s.charAt(s.length() - 1)=='_') {//视频url的两种形式'_'和'-'
+		if (s.charAt(s.length() - 1) == '_') {// 视频url的两种形式'_'和'-'
 			for (int i = 0; i < Urls.length; i++) {
 				if (i < 9) {
 					Urls[i] = s + "00" + (i + 1) + ".mp4";
@@ -81,20 +97,32 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initView() {
 		setContentView(R.layout.media);
-		mPreview = (SurfaceView) findViewById(R.id.surface);
-		holder = mPreview.getHolder();
+		mSurfaceView = (SurfaceView) findViewById(R.id.surface);
+		holder = mSurfaceView.getHolder();
 		holder.addCallback(this);
 		holder.setFormat(PixelFormat.RGBA_8888);
 		currentDisplay = getWindowManager().getDefaultDisplay();
 		controller = new MyMediaControllerView(this, unitBean, Urls);
 		progressDialog = new ProgressDialog(MovieAct.this);
 		progressDialog.setTitle(null);
-		progressDialog.setMessage("曲有误,周郎顾");
+		progressDialog.setMessage("视频正在拼命加载中...");
 		progressDialog.setCancelable(false);
 		progressDialog.setOnKeyListener(onKeyListener);
+		System.out.println("initView show");
 		progressDialog.show();
+		// 声音
+		gesture_volume_layout = (RelativeLayout) findViewById(R.id.gesture_volume_layout);
+		gesture_iv_player_volume = (ImageView) findViewById(R.id.gesture_iv_player_volume);
+		geture_tv_volume_percentage = (TextView) findViewById(R.id.geture_tv_volume_percentage);
+		gesture_iv_player_volume = (ImageView) findViewById(R.id.gesture_iv_player_volume);
+		audiomanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		maxVolume = audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC); // 获取系统最大音量
+		currentVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC); // 获取当前值
+		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Movie");
 	}
 
 	public void surfaceChanged(SurfaceHolder surfaceholder, int i, int j, int k) {
@@ -104,7 +132,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		if (mIsVideofirst) {
+		if (mIsVideoFirst) {
 			playVideo();
 		} else {
 			mMediaPlayer.setDisplay(holder);
@@ -154,8 +182,27 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		}
 	}
 
+	boolean needResume = false;
+
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {
 		switch (what) {
+		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+			// 开始缓存，暂停播放
+			if (mIsDialogFirst != true && isPlaying()) {// 防止第一次加载视频时对话框总是闪一下
+				pause();
+				needResume = true;
+				progressDialog.show();
+			}
+			mIsDialogFirst = false;
+			break;
+		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+			// 缓存完成，继续播放
+			if (needResume) {
+				start();
+				needResume = false;
+				progressDialog.dismiss();
+			}
+			break;
 		case MediaPlayer.MEDIA_ERROR_IO:
 		case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
 		case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
@@ -223,7 +270,11 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 				}
 			}
 		}
-		holder.setFixedSize(mVideoWidth, mVideoHeight);
+		if (mIsFullScreen) {
+			holder.setFixedSize(currentDisplay.getWidth(), currentDisplay.getHeight());
+		} else {
+			holder.setFixedSize(mVideoWidth, mVideoHeight);
+		}
 		mMediaPlayer.start();
 		controller.setMediaPlayer(this);
 		controller.setAnchorView(this.findViewById(R.id.MainView));
@@ -308,14 +359,61 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		mMediaPlayer.start();
 	}
 
+	long last;
+	float moveY;
+
+	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+	public boolean onTouchEvent(MotionEvent e) {
+		// 屏幕大小调节
+		if (e.getAction() == MotionEvent.ACTION_DOWN) {
+			if ((System.currentTimeMillis() - last) < 300) {
+				if (!mIsFullScreen) {
+					holder.setFixedSize(currentDisplay.getWidth(), currentDisplay.getHeight());
+					mIsFullScreen = true;
+				} else {
+					holder.setFixedSize(mVideoWidth, mVideoHeight);
+					mIsFullScreen = false;
+				}
+
+			}
+			last = System.currentTimeMillis();
+			moveY = e.getY();
 			if (controller.isShowing()) {
 				controller.hide();
 			} else {
 				controller.show();
 			}
+		}
+		// 声音调节
+		if (e.getAction() == MotionEvent.ACTION_MOVE) {
+			if (Math.abs(e.getY() - moveY) < 5) {
+				return false;
+			}
+			gesture_volume_layout.setVisibility(View.VISIBLE);
+			currentVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC); // 获取当前值
+			if (e.getY() < moveY - 5) {
+				if (currentVolume < maxVolume) {
+					currentVolume++;
+					moveY = e.getY();
+				}
+				gesture_iv_player_volume.setImageResource(R.drawable.player_volume);
+			} else if (e.getY() > moveY + 5) {
+				if (currentVolume > 0) {
+					currentVolume--;
+					moveY = e.getY();
+					if (currentVolume == 0) {// 静音，设定静音独有的图片
+						gesture_iv_player_volume.setImageResource(R.drawable.player_silence);
+					}
+				}
+			}
+			moveY = e.getY();
+			int percentage = (currentVolume * 100) / maxVolume;
+			geture_tv_volume_percentage.setText(percentage + "%");
+			audiomanager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+		}
+		if (e.getAction() == MotionEvent.ACTION_UP) {
+			gesture_volume_layout.setVisibility(View.INVISIBLE);
 		}
 		return false;
 	}
@@ -335,11 +433,12 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mIsVideofirst) {
+		if (mIsVideoFirst) {
 			controller.show(Integer.MAX_VALUE);
 		} else {
 			controller.show();
 		}
+		wakeLock.acquire();
 	}
 
 	@Override
@@ -354,12 +453,13 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		if (mIsVideoError) {
 			finish();
 		}
+		wakeLock.release();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		mIsVideofirst = false;
+		mIsVideoFirst = false;
 	}
 
 	@Override
