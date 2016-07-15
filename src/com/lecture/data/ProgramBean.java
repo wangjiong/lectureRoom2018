@@ -28,7 +28,7 @@ public class ProgramBean {
 	 */
 	int Num;
 
-	public Drawable image;
+	public Drawable drawable;
 
 	public String getId() {
 		return Id;
@@ -37,7 +37,7 @@ public class ProgramBean {
 	public void setId(String id) {
 		Id = id;
 	}
-	
+
 	public String getName() {
 		return Name;
 	}
@@ -45,14 +45,15 @@ public class ProgramBean {
 	public void setName(String name) {
 		Name = name;
 	}
-	
-	public int getDynasty(){
+
+	public int getDynasty() {
 		return Dynasty;
 	}
-	
-	public void setDynasty(int dynasty){
-		Dynasty=dynasty;
+
+	public void setDynasty(int dynasty) {
+		Dynasty = dynasty;
 	}
+
 	public String getAuthor() {
 		return Author;
 	}

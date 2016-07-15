@@ -10,7 +10,7 @@
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:layout_margin="5dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/movie" />
 
     <LinearLayout
@@ -24,12 +24,39 @@
             android:layout_height="wrap_content"
             android:textSize="17sp" />
 
-        <TextView
-            android:layout_marginTop="-10dp"
-            android:id="@+id/text_download"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp" />
+            android:layout_marginTop="-10dp" >
+
+            <TextView
+                android:id="@+id/text_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/download_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_download"
+                android:layout_centerHorizontal="true"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/stop_down"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_media_download"
+                android:gravity="center"
+                android:text="下载"
+                android:textColor="#666"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

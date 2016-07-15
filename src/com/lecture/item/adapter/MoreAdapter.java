@@ -1,7 +1,10 @@
 package com.lecture.item.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +15,21 @@ import com.lecture.data.ProgramBean;
 import com.lecture.media.R;
 
 public class MoreAdapter extends BaseAdapter {
-	ArrayList<ProgramBean> morePrograms = new ArrayList<ProgramBean>();
-	private LayoutInflater inflater;
+	ArrayList<ProgramBean> mMorePrograms = new ArrayList<ProgramBean>();
+	Context mContext;
+	LayoutInflater mInflater;
+	HashMap<Integer, Drawable> mBitmapMap = new HashMap<Integer, Drawable>();
 
 	public MoreAdapter(Context context, ArrayList<ProgramBean> morePrograms) {
-		this.morePrograms = morePrograms;
-		inflater = LayoutInflater.from(context);
+		this.mMorePrograms = morePrograms;
+		mContext = context;
+		mInflater = LayoutInflater.from(mContext);
 	}
 
 	@Override
 	public int getCount() {
 		// TODO 自动生成的方法存根
-		return morePrograms.size();
+		return mMorePrograms.size();
 	}
 
 	@Override
@@ -42,7 +48,7 @@ public class MoreAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Holder holder;
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.more_item, null);
+			convertView = mInflater.inflate(R.layout.more_item, null);
 			holder = new Holder();
 			holder.imageView = (ImageView) convertView.findViewById(R.id.movie_image);
 			holder.textView = (TextView) convertView.findViewById(R.id.movie_text);
@@ -51,8 +57,13 @@ public class MoreAdapter extends BaseAdapter {
 		} else {
 			holder = (Holder) convertView.getTag();
 		}
-		holder.imageView.setImageDrawable(morePrograms.get(position).image);
-		holder.textView.setText(morePrograms.get(position).getName());
+		holder.imageView.setImageDrawable(mMorePrograms.get(position).drawable);
+
+		if (mMorePrograms.get(position).getName().length() > 13) {
+			holder.textView.setText(mMorePrograms.get(position).getName().substring(0, 8) + "..." + mMorePrograms.get(position).getName().substring(mMorePrograms.get(position).getName().length() - 4));
+		} else {
+			holder.textView.setText(mMorePrograms.get(position).getName());
+		}
 		return convertView;
 	}
 

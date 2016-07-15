@@ -1,18 +1,26 @@
 package com.lecture.main;
 
+import java.util.HashMap;
+
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.HttpHandler;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.lecture.data.DbData;
+import com.lecture.data.ProgramBean;
 import com.lecture.item.fragment.ClassifyFrag;
 import com.lecture.item.fragment.ItemFrag;
 import com.lecture.item.fragment.PersonFrag;
 import com.lecture.item.fragment.RecommendFrag;
 import com.lecture.item.fragment.SearchFrag;
 import com.lecture.media.R;
+import com.lecture.util.DownLoad;
 
 public class MainActivity extends Activity implements ItemFrag.Callbacks {
 	RecommendFrag recommendFrag;
@@ -24,12 +32,7 @@ public class MainActivity extends Activity implements ItemFrag.Callbacks {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initData();
 		initView();
-	}
-
-	private void initData() {
-		new DbData(this);
 	}
 
 	private void initView() {
@@ -47,6 +50,9 @@ public class MainActivity extends Activity implements ItemFrag.Callbacks {
 				ft.show(recommendFrag);
 			} else {
 				recommendFrag = new RecommendFrag();
+				classifyFrag = new ClassifyFrag();
+				ft.add(R.id.content, classifyFrag);
+				ft.hide(classifyFrag);
 				ft.add(R.id.content, recommendFrag);
 			}
 			break;
@@ -91,13 +97,16 @@ public class MainActivity extends Activity implements ItemFrag.Callbacks {
 
 	private long mExitTime;
 
+	@SuppressWarnings("rawtypes")
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if ((System.currentTimeMillis() - mExitTime) > 1000) {
 				Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
 				mExitTime = System.currentTimeMillis();
-
 			} else {
+				for (HashMap.Entry<String, HttpHandler> entry : DownLoad.sHandlerMap.entrySet()) {
+					entry.getValue().stop();
+				}
 				finish();
 			}
 			return true;

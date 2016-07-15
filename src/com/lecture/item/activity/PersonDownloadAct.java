@@ -1,8 +1,6 @@
 package com.lecture.item.activity;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -26,16 +24,14 @@ import android.widget.TextView;
 import com.lecture.data.DbData;
 import com.lecture.data.DownloadBean;
 import com.lecture.media.R;
+import com.lecture.util.Param;
 
 public class PersonDownloadAct extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	// 数据
-	public static List<DownloadBean> downloadBeans = null;
-	public static MyBaseAdapter adapter = null;
-	public static DownloadBean downloadBean = null;
-	public static String[] Urls;
-	// 布局
-	ListView listView;
-	boolean isFirstStart = true;
+	public static MyBaseAdapter sAdapter;
+	List<DownloadBean> mDownloadBeans;
+	DownloadBean mDownloadBean;
+	String[] mUrls;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +41,15 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 	}
 
 	private void initData() {
-		downloadBeans = DbData.readDownload();
-		Collections.reverse(downloadBeans);
-		adapter = new MyBaseAdapter();
+		mDownloadBeans = DbData.sDownloadBeans;
+		sAdapter = new MyBaseAdapter();
 	}
 
 	private void initView() {
 		setContentView(R.layout.person_download);
-		listView = (ListView) findViewById(R.id.download_listView);
-		listView.setAdapter(adapter);
+		ListView listView = (ListView) findViewById(R.id.download_listView);
+		((TextView) findViewById(R.id.person)).setText("下载完成");
+		listView.setAdapter(sAdapter);
 		listView.setOnItemClickListener(this);
 		listView.setOnItemLongClickListener(this);
 		TextView back = (TextView) findViewById(R.id.download_back);
@@ -69,13 +65,13 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 		@Override
 		public int getCount() {
 			// TODO 自动生成的方法存根
-			return downloadBeans.size();
+			return mDownloadBeans.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
 			// TODO 自动生成的方法存根
-			return downloadBeans.get(position);
+			return mDownloadBeans.get(position);
 		}
 
 		@Override
@@ -97,9 +93,9 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + DbData.getProgramBeanIdByUnitBeanTitle(downloadBeans.get(position).getTitle()) + ".jpg"));
-			holder.textView.setText("名称：《" + downloadBeans.get(position).getTitle() + "》\n集数：" + downloadBeans.get(position).getEpisode() + "\n标题：" + downloadBeans.get(position).getName());
-			holder.textViewDownload.setText("\n下载进度：" + downloadBeans.get(position).getDownload() + "%");
+			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + DbData.getProgramBeanIdByUnitBeanTitle(mDownloadBeans.get(position).getTitle()) + ".jpg"));
+			holder.textView.setText("名称：《" + mDownloadBeans.get(position).getTitle() + "》\n播放集数：" + mDownloadBeans.get(position).getEpisode() + "\n标题：" + mDownloadBeans.get(position).getName());
+			holder.textViewDownload.setText("\n下载进度：" + mDownloadBeans.get(position).getDownload() + "%");
 			return convertView;
 		}
 	};
@@ -112,34 +108,19 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		downloadBean = downloadBeans.get(position);
-		File[] files = DbData.fileDownload.listFiles();
-		files = files[files.length - position - 1].listFiles();
-		Urls = new String[files.length];
-		for (int i = 0; i < files.length; i++) {
-			Urls[i] = files[i].toString();
-		}
-		Arrays.sort(Urls);
-		Intent intent = new Intent(this, MovieDownloadAct.class);
+		mDownloadBean = mDownloadBeans.get(position);
+		Intent intent = new Intent(this, MovieAct.class);
+		intent.putExtra(Param.FROM_TYPE, 1);
+		intent.putExtra(Param.TITLE_KEY, mDownloadBean.getTitle());
+		intent.putExtra(Param.EPISODE_KEY, mDownloadBean.getEpisode());
 		startActivity(intent);
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		mDownloadBean = mDownloadBeans.get(position);
 		dialog(position);
-		return false;
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (!isFirstStart == true) {
-			initData();
-			listView.setAdapter(adapter);
-			adapter.notifyDataSetChanged();
-		} else {
-			isFirstStart = false;
-		}
+		return true;
 	}
 
 	protected void dialog(final int position) {
@@ -150,9 +131,19 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				File[] files = DbData.fileDownload.listFiles();
-				DbData.deleteDir(files[files.length - position - 1]);
-				downloadBeans.remove(position);
-				adapter.notifyDataSetChanged();
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].toString().contains(mDownloadBean.getTitle() + " " + mDownloadBean.getEpisode())) {
+						DbData.deleteDir(files[i]);
+						break;
+					}
+				}
+				mDownloadBeans.remove(position);
+				sAdapter.notifyDataSetChanged();
+				new Thread() {
+					public void run() {
+						DbData.sFinalDb.delete(mDownloadBean);
+					}
+				}.start();
 			}
 		});
 		builder.setNegativeButton("取消", new OnClickListener() {
@@ -162,5 +153,11 @@ public class PersonDownloadAct extends Activity implements OnItemClickListener, 
 			}
 		});
 		builder.create().show();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		sAdapter = null;
 	}
 }

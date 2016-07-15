@@ -27,11 +27,8 @@ public class ClassifyAct extends Activity {
 	private void initData() {
 		int classifyType = getIntent().getIntExtra(Param.CLASSIFY_TYPE, 0);
 		classifyPrograms = DbData.getProgramBeansClassify(classifyType);
-		for (int i = 0; i < classifyPrograms.size(); i++) {
-			classifyPrograms.get(i).setName("《" + classifyPrograms.get(i).getName() + "》");
-		}
 		Collections.reverse(classifyPrograms);
-		//除去重复的值
+		// 除去重复的值
 		ArrayList<ProgramBean> tempPrograms = new ArrayList<ProgramBean>();
 		for (int i = 0; i < classifyPrograms.size(); i++) {
 			int j = 0;
@@ -47,6 +44,10 @@ public class ClassifyAct extends Activity {
 			}
 		}
 		classifyPrograms = tempPrograms;
+		for (int i = 0; i < classifyPrograms.size(); i++) {
+			classifyPrograms.get(i).setName("《" + classifyPrograms.get(i).getName() + "》");
+			classifyPrograms.get(i).drawable = DbData.getDrawableById(classifyPrograms.get(i).getId());
+		}
 	}
 
 	@Override

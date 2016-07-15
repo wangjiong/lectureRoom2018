@@ -2,15 +2,9 @@ package com.lecture.item.view;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
 import net.tsz.afinal.http.HttpHandler;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,16 +17,15 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lecture.data.DbData;
 import com.lecture.data.UnitBean;
-import com.lecture.item.activity.PersonDownloadAct;
+import com.lecture.item.activity.PersonDownloadingAct;
 import com.lecture.media.R;
+import com.lecture.util.DownLoad;
+import com.lecture.util.Util;
 
 public class MyMediaControllerView extends MediaController {
-	public static List<String> sDownloading = new ArrayList<String>(); // 防止同时重复下载一个文件
 	// 数据
-	private UnitBean unitBean;
-	private String[] Urls;
+	private UnitBean mUnitBean;
 	// 布局
 	private Activity mActivity;
 	private View mView;
@@ -51,8 +44,7 @@ public class MyMediaControllerView extends MediaController {
 		super(arg0);
 		// 数据
 		this.mActivity = arg0;
-		this.unitBean = arg1;
-		this.Urls = arg2;
+		this.mUnitBean = arg1;
 		// 布局
 		mView = LayoutInflater.from(getContext()).inflate(R.layout.media_controller, null);
 		back = (TextView) mView.findViewById(R.id.back);
@@ -61,7 +53,7 @@ public class MyMediaControllerView extends MediaController {
 		power = (ImageView) mView.findViewById(R.id.power);
 		download = (TextView) mView.findViewById(R.id.media_controller_download);
 		// 添加响应事件
-		title.setText("《" + unitBean.getTitle() + "》 第" + unitBean.getEpisode() + "集 " + unitBean.getName());
+		title.setText("《" + mUnitBean.getTitle() + "》 第" + mUnitBean.getEpisode() + "集 " + mUnitBean.getName());
 		back.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				mActivity.finish();
@@ -70,71 +62,11 @@ public class MyMediaControllerView extends MediaController {
 		// 下载事件
 		download.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (isDownload || sDownloading.contains(unitBean.getTitle() + unitBean.getEpisode())) {
-					Toast.makeText(mActivity, "正在下载", Toast.LENGTH_SHORT).show();
+				if (Util.isFastDoubleClick()) {
+					Toast.makeText(mActivity, "不要频繁点击下载哦~", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				// 创建文件夹
-				file = DbData.createDownload(unitBean);
-				if (file.listFiles() != null) {
-					segment = file.listFiles().length;
-					if (segment == 0)
-						segment++;
-					if (segment == unitBean.getSegment()) {
-						Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
-						return;
-					} else {
-						File f = new File(file + "/movie" + (segment > 9 ? segment : ("0" + segment)) + ".mp4");
-						if (f.exists())
-							f.delete();
-					}
-				}
-				Toast.makeText(mActivity, "开始下载", Toast.LENGTH_SHORT).show();
-				sDownloading.add(unitBean.getTitle() + unitBean.getEpisode());
-				download();
-				isDownload = true;
-			}
-		});
-	}
-
-	// 下载
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void download() {
-		FinalHttp fh = new FinalHttp();
-		handler = fh.download(Urls[segment - 1], new AjaxParams(), file + "/movie" + (segment > 9 ? segment : ("0" + segment)) + ".mp4", true, new AjaxCallBack() {
-			@Override
-			public void onLoading(long count, long current) {
-
-			}
-
-			@Override
-			public void onSuccess(Object t) {
-				if (segment != unitBean.getSegment()) {
-					segment++;
-					download();
-					if (PersonDownloadAct.adapter != null && PersonDownloadAct.downloadBeans != null) {
-						PersonDownloadAct.downloadBeans = DbData.readDownload();
-						Collections.reverse(PersonDownloadAct.downloadBeans);
-						PersonDownloadAct.adapter.notifyDataSetChanged();
-					}
-
-				} else {
-					Toast.makeText(mActivity, "下载完成", Toast.LENGTH_SHORT).show();
-					if (PersonDownloadAct.adapter != null && PersonDownloadAct.downloadBeans != null) {
-						PersonDownloadAct.downloadBeans = DbData.readDownload();
-						Collections.reverse(PersonDownloadAct.downloadBeans);
-						PersonDownloadAct.adapter.notifyDataSetChanged();
-						sDownloading.remove(unitBean.getTitle() + unitBean.getEpisode());
-					}
-					isDownload = false;
-				}
-			}
-
-			@Override
-			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				super.onFailure(t, errorNo, strMsg);
-				System.out.println("onFailure    " + "t" + t.toString() + "    errorNo" + errorNo + "    strMsg" + strMsg);
-				download();
+				new DownLoad(mUnitBean).downLoad();
 			}
 		});
 	}

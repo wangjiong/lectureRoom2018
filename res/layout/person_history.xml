@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00ccff"
+            android:background="#2B2F3E"
             android:gravity="center"
             android:padding="5dp"
             android:text="观看记录"

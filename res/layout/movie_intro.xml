@@ -16,6 +16,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="简介"
                 android:textSize="20sp" />
 
@@ -27,10 +28,10 @@
                 <ImageView
                     android:id="@+id/image_intro"
                     android:layout_width="100dp"
-                    android:layout_height="150dp"
+                    android:layout_height="140dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/movie" />
 
                 <TextView
@@ -54,6 +55,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:text="剧集"
                     android:textSize="20sp" />
 
@@ -62,8 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_margin="5dp"
-                    android:text="更多"
+                    android:layout_marginRight="15dp"
+                    android:text="下载"
                     android:textSize="15sp" />
             </RelativeLayout>
 

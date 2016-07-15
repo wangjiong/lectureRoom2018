@@ -1,8 +1,6 @@
 package com.lecture.item.activity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,17 +24,18 @@ public class MoreAct extends Activity {
 	GridView gridView;
 
 	private void initData() {
-		int moreType=getIntent().getExtras().getInt(Param.MORE_TYPE);
-		int recommmnedType=getIntent().getExtras().getInt(Param.RECOMMEND_TYPE);
-		String authorType=getIntent().getExtras().getString(Param.AUTHOR_TYPE);
-		String timeType=getIntent().getExtras().getString(Param.TIME_TYPE);
-		if(moreType!=-1){//从更多过来的数据
+		int moreType = getIntent().getExtras().getInt(Param.MORE_TYPE);
+		int recommmnedType = getIntent().getExtras().getInt(Param.RECOMMEND_TYPE);
+		String titleType = getIntent().getExtras().getString(Param.TITLE_TYPE);
+		String authorType = getIntent().getExtras().getString(Param.AUTHOR_TYPE);
+		String timeType = getIntent().getExtras().getString(Param.TIME_TYPE);
+		if (moreType != -1) {// 从更多过来的数据
 			programBeans = DbData.getProgramBeansMore(moreType);
-		}else if(recommmnedType!=-1){//从推荐过来数据
+		} else if (recommmnedType != -1) {// 从推荐过来数据
 			programBeans = DbData.getProgramBeansRecommend(recommmnedType);
-		}else if(authorType!=null){	//从搜索过来的数据，作者
-			programBeans=DbData.getProgramBeansByAuthor(authorType);
-			//除去重复的值
+		} else if (titleType != null) {// 从搜索过来的数据，名称
+			programBeans = DbData.getProgramBeanIdByTitle(titleType);
+			// 除去重复的值
 			ArrayList<ProgramBean> tempPrograms = new ArrayList<ProgramBean>();
 			for (int i = 0; i < programBeans.size(); i++) {
 				int j = 0;
@@ -50,11 +49,28 @@ public class MoreAct extends Activity {
 				}
 			}
 			programBeans = tempPrograms;
-		}else if(timeType!=null){//从搜索过来的数据，时间
-			programBeans=DbData.getProgramBeansByTime(timeType);
+		} else if (authorType != null) { // 从搜索过来的数据，作者
+			programBeans = DbData.getProgramBeansByAuthor(authorType);
+			// 除去重复的值
+			ArrayList<ProgramBean> tempPrograms = new ArrayList<ProgramBean>();
+			for (int i = 0; i < programBeans.size(); i++) {
+				int j = 0;
+				for (; j < tempPrograms.size(); j++) {
+					if (tempPrograms.get(j).getName().equals(programBeans.get(i).getName())) {
+						break;
+					}
+				}
+				if (j == tempPrograms.size()) {
+					tempPrograms.add(programBeans.get(i));
+				}
+			}
+			programBeans = tempPrograms;
+		} else if (timeType != null) {// 从搜索过来的数据，时间
+			programBeans = DbData.getProgramBeansByTime(timeType);
 		}
 		for (int i = 0; i < programBeans.size(); i++) {
 			programBeans.get(i).setName("《" + programBeans.get(i).getName() + "》");
+			programBeans.get(i).drawable = DbData.getDrawableById(programBeans.get(i).getId());
 		}
 	}
 

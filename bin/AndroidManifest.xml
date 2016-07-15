@@ -25,39 +25,64 @@
             android:name="io.vov.vitamio.activity.InitActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="com.lecture.main.MainActivity" >
+        <activity
+            android:name="com.lecture.main.StartActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+        <activity
+            android:name="com.lecture.main.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name="com.lecture.item.activity.MovieAct"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="com.lecture.item.activity.MovieHistoryAct"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:name="com.lecture.item.activity.MovieIntroAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
-            android:name="com.lecture.item.activity.MovieDownloadAct"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-        
-        <activity android:name="com.lecture.item.activity.MovieIntroAct" >
+            android:name="com.lecture.item.activity.PersonHistoryAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lecture.item.activity.PersonHistoryAct" >
+        <activity
+            android:name="com.lecture.item.activity.PersonDownloadAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lecture.item.activity.PersonDownloadAct" >
+        <activity
+            android:name="com.lecture.item.activity.PersonAboutAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lecture.item.activity.MoreAct" >
+        <activity
+            android:name="com.lecture.item.activity.PersonDownloadingAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.lecture.item.activity.ClassifyAct" >
+        <activity
+            android:name="com.lecture.item.activity.MoreAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.lecture.item.activity.ClassifyAct"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

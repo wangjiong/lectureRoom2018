@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" 
     android:background="#000"
-    >
+    android:orientation="horizontal" >
 
     <TextView
         android:id="@+id/recommend"
@@ -12,8 +11,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="推荐"
-         />
+        android:text="推荐" />
 
     <TextView
         android:id="@+id/classify"
@@ -21,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-         android:text="分类"/>
+        android:text="分类" />
 
     <TextView
         android:id="@+id/search"
@@ -29,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-         android:text="搜索"/>
+        android:text="搜索" />
 
     <TextView
         android:id="@+id/account"
@@ -37,6 +35,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="个人" />
+        android:text="我的" />
 
 </LinearLayout>

@@ -12,14 +12,28 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/search_back"
+        <FrameLayout
+            android:id="@+id/search_back_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="名称"
-            android:textSize="20sp" />
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/search_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="名称"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/icon_down" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -31,18 +45,25 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="2dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:maxLength="20"
-                android:maxLines="1" />
+                android:layout_marginTop="2dp"
+                android:background="@drawable/border_edit"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:hint="易中天品三国"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:padding="8dp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/search"
+            android:layout_margin="5dp"
+            android:background="@android:drawable/ic_menu_search"
+            android:padding="5dp"
             android:scaleType="fitCenter" />
     </LinearLayout>
 
@@ -52,7 +73,8 @@
         android:layout_height="fill_parent"
         android:background="#fff"
         android:orientation="vertical" >
-        <com.lecture.item.view.KeywordsView
+
+        <com.lecture.item.view.KeywordsView
             android:id="@+id/word"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

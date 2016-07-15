@@ -1,38 +1,60 @@
 package com.lecture.data;
 
-import android.graphics.drawable.Drawable;
-
 public class HistoryBean {
-	/** 节目唯一ID */
-	String Id;
+	int id;
+	/** 节目首播的时间 */
+	String idTime;
 	/** 节目名称 */
 	String title;
 	/** 节目集数 */
-	String Num;
+	String num;
 	/** 节目作者 */
-	String Author;
+	String author;
 	/** 节目集数 */
-	String Episode;
+	String episode;
 	/** 节目每集名字 */
-	String Name;
+	String name;
 	/** 播放时间 */
-	String time;
-	public Drawable image;
+	long playTime;
 
-	public String getId() {
-		return Id;
+	public HistoryBean() {
+
 	}
 
-	public void setId(String id) {
-		Id = id;
+	public HistoryBean(String idTime, String title, String num, String author, String episode, String name, long playTime) {
+		this.idTime = idTime;
+		this.title = title;
+		this.num = num;
+		this.author = author;
+		this.episode = episode;
+		this.name = name;
+		this.playTime = playTime;
+	}
+	
+	public HistoryBean(HistoryBean h) {
+		this.idTime = h.getIdTime();
+		this.title = h.getTitle();
+		this.num = h.getNum();
+		this.author = h.getAuthor();
+		this.episode = h.getEpisode();
+		this.name = h.getName();
+		this.playTime = h.getPlayTime();
 	}
 
-	public String getNum() {
-		return Num;
+	public int getId() {
+		return id;
 	}
 
-	public void setNum(String num) {
-		Num = num;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getIdTime() {
+		return idTime;
+	}
+
+	public void setIdTime(String idTime) {
+		this.idTime = idTime;
 	}
 
 	public String getTitle() {
@@ -43,42 +65,49 @@ public class HistoryBean {
 		this.title = title;
 	}
 
+	public String getNum() {
+		return num;
+	}
+
+	public void setNum(String num) {
+		this.num = num;
+	}
+
 	public String getAuthor() {
-		return Author;
+		return author;
 	}
 
 	public void setAuthor(String author) {
-		Author = author;
+		this.author = author;
 	}
 
 	public String getEpisode() {
-		return Episode;
+		return episode;
 	}
 
 	public void setEpisode(String episode) {
-		Episode = episode;
+		this.episode = episode;
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
-	public String getTime() {
-		return time;
+	public long getPlayTime() {
+		return playTime;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public void setPlayTime(long playTime) {
+		this.playTime = playTime;
 	}
 
 	@Override
 	public String toString() {
-		return Id + " " + title + " " + Num + " " + Author + " " + Episode
-				+ " " + Name + " " + time;
+		return "HistoryBean [id=" + id + ", idTime=" + idTime + ", title=" + title + ", num=" + num + ", author=" + author + ", episode=" + episode + ", name=" + name + ", playTime=" + playTime + "]";
 	}
 
 }

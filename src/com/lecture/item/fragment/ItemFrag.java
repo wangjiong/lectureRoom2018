@@ -27,8 +27,7 @@ public class ItemFrag extends Fragment {
 		super.onCreate(savedInstanceState);
 	}
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.item_fragment, container, false);
 		recommend = (TextView) view.findViewById(R.id.recommend);
 		classify = (TextView) view.findViewById(R.id.classify);
@@ -58,26 +57,51 @@ public class ItemFrag extends Fragment {
 		recommend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setColor(1);
 				mCallbacks.onItemSelected(1);
 			}
 		});
 		classify.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setColor(2);
 				mCallbacks.onItemSelected(2);
 			}
 		});
 		search.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setColor(3);
 				mCallbacks.onItemSelected(3);
 			}
 		});
 		account.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setColor(4);
 				mCallbacks.onItemSelected(4);
 			}
 		});
+	}
+
+	private void setColor(int type) {
+//		recommend.setTextColor(Color.WHITE);
+//		classify.setTextColor(Color.WHITE);
+//		search.setTextColor(Color.WHITE);
+//		account.setTextColor(Color.WHITE);
+//		switch (type) {
+//		case 1:
+//			recommend.setTextColor(Color.YELLOW);
+//			break;
+//		case 2:
+//			classify.setTextColor(Color.YELLOW);
+//			break;
+//		case 3:
+//			search.setTextColor(Color.YELLOW);
+//			break;
+//		case 4:
+//			account.setTextColor(Color.YELLOW);
+//			break;
+//		}
 	}
 }

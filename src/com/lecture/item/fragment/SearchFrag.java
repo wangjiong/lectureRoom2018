@@ -1,27 +1,29 @@
 package com.lecture.item.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
 import com.lecture.data.DbData;
 import com.lecture.item.activity.MoreAct;
-import com.lecture.item.activity.MovieIntroAct;
 import com.lecture.item.view.KeywordsView;
 import com.lecture.media.R;
 import com.lecture.util.Param;
@@ -29,9 +31,8 @@ import com.lecture.util.Param;
 public class SearchFrag extends Fragment implements View.OnClickListener {
 	// 搜索类型
 	private int searchType = 0;// 0代表按名字 1代表按作者 2代表按年份
-	private String[] totalKeys = null;
 	private String[] key_words = new String[18];
-	private String[] movie_texts = (String[]) DbData.getSearchStrings().toArray(new String[0]);
+	private String[] movie_texts;
 	private KeywordsView showKeywords = null;
 	private GestureDetector gestureDetector;
 
@@ -43,61 +44,46 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.search, container, false);
 		search_text = (EditText) view.findViewById(R.id.search_text);
+		search_text.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					String text = (search_text.getText()).toString().trim();
+					search(text);
+				}
+				return false;
+			}
+		});
 		search_button = (Button) view.findViewById(R.id.search_button);
 		search_button.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				String text = (search_text.getText()).toString().trim();
-				if (text.equals("")) {
-					Toast.makeText(getActivity(), "输入内容不能为空哦！", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if (searchType == 0) {// 名字
-					if (text.length() > 2) {
-						String id = DbData.getProgramBeanIdByTitle(text.substring(1, text.length() - 1));
-						if (id != null) {
-							Intent intent = new Intent(getActivity(), MovieIntroAct.class);
-							intent.putExtra(Param.MOVIE_KEY, id);
-							startActivity(intent);
-						} else {
-							Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
-						}
-					} else {
-						Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
-					}
-				}
-				if (searchType == 1) {// 作者
-					Intent intent = new Intent(getActivity(), MoreAct.class);
-					intent.putExtra(Param.AUTHOR_TYPE, text);
-					intent.putExtra(Param.RECOMMEND_TYPE, -1);
-					intent.putExtra(Param.MORE_TYPE, -1);
-					startActivity(intent);
-				}
-				if (searchType == 2) {// 年份
-					Intent intent = new Intent(getActivity(), MoreAct.class);
-					intent.putExtra(Param.TIME_TYPE, text);
-					intent.putExtra(Param.RECOMMEND_TYPE, -1);
-					intent.putExtra(Param.MORE_TYPE, -1);
-					startActivity(intent);
-				}
+				search(text);
 			}
 		});
 		searchTypeTextView = (TextView) view.findViewById(R.id.search_back);
-		searchTypeTextView.setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.search_back_fl).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if(searchType==0){
+				if (searchType == 0) {
 					searchTypeTextView.setText("作者");
-					searchType=1;
+					searchType = 1;
+					search_text.setHint("易中天");
+					search_text.setInputType(InputType.TYPE_CLASS_TEXT);
 					return;
 				}
-				if(searchType==1){
+				if (searchType == 1) {
 					searchTypeTextView.setText("时间");
-					searchType=2;
+					searchType = 2;
+					search_text.setHint("2006");
+					search_text.setInputType(InputType.TYPE_CLASS_NUMBER);
 					return;
 				}
-				if(searchType==2){
+				if (searchType == 2) {
 					searchTypeTextView.setText("名称");
-					searchType=0;
+					searchType = 0;
+					search_text.setHint("易中天品三国");
+					search_text.setInputType(InputType.TYPE_CLASS_TEXT);
 					return;
 				}
 			}
@@ -116,20 +102,46 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 		return view;
 	}
 
-	private String[] getRandomArray() {
-		if (totalKeys != null && totalKeys.length > 0) {
-			String[] keys = new String[15];
-			List<String> ks = new ArrayList<String>();
-			for (int i = 0; i < totalKeys.length; i++) {
-				ks.add(totalKeys[i]);
-			}
-			for (int i = 0; i < keys.length; i++) {
-				int k = (int) (ks.size() * Math.random());
-				keys[i] = ks.remove(k);
-			}
-			System.out.println("result's length = " + keys.length);
-			return keys;
+	private void search(String text) {
+		if (text.equals("")) {
+			Toast.makeText(getActivity(), "输入内容不能为空哦！", Toast.LENGTH_SHORT).show();
+			return;
 		}
+		if (searchType == 0) {// 名字
+			if (DbData.searchByTitle(text)) {
+				Intent intent = new Intent(getActivity(), MoreAct.class);
+				intent.putExtra(Param.TITLE_TYPE, text);
+				intent.putExtra(Param.RECOMMEND_TYPE, -1);
+				intent.putExtra(Param.MORE_TYPE, -1);
+				startActivity(intent);
+			} else {
+				Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
+			}
+		} else if (searchType == 1) {// 作者
+			if (DbData.searchByAuthor(text)) {
+				Intent intent = new Intent(getActivity(), MoreAct.class);
+				intent.putExtra(Param.AUTHOR_TYPE, text);
+				intent.putExtra(Param.RECOMMEND_TYPE, -1);
+				intent.putExtra(Param.MORE_TYPE, -1);
+				startActivity(intent);
+			} else {
+				Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
+			}
+		} else if (searchType == 2) {// 年份
+			if (DbData.searchByTime(text)) {
+				Intent intent = new Intent(getActivity(), MoreAct.class);
+				intent.putExtra(Param.TIME_TYPE, text);
+				intent.putExtra(Param.RECOMMEND_TYPE, -1);
+				intent.putExtra(Param.MORE_TYPE, -1);
+				startActivity(intent);
+			} else {
+				Toast.makeText(getActivity(), "抱歉！没有找到", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
+	private String[] getRandomArray() {
+		movie_texts = DbData.getSearchStrings();
 		return movie_texts;
 	}
 
@@ -234,7 +246,20 @@ public class SearchFrag extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		if (searchType != 0) {
+			searchTypeTextView.setText("名称");
+			searchType = 0;
+			search_text.setHint("易中天品三国");
+			search_text.setInputType(InputType.TYPE_CLASS_TEXT);
+		}
 		String kw = ((TextView) v).getText().toString();
-		search_text.setText(kw);
+		String text = (search_text.getText()).toString().trim();
+		if (text.equals(kw.substring(1, kw.length() - 1))) {
+			search(text);
+		} else {
+			search_text.setText(kw.substring(1, kw.length() - 1));
+			search_text.setSelection(kw.substring(1, kw.length() - 1).length());
+			search_text.requestFocus();
+		}
 	}
 }

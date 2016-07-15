@@ -2,8 +2,8 @@ package com.lecture.item.fragment;
 
 import java.util.ArrayList;
 
-import net.tsz.afinal.FinalBitmap;
-
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,12 +24,17 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lecture.data.BaseApi;
+import com.lecture.data.Data;
 import com.lecture.data.DbData;
 import com.lecture.data.ProgramBean;
+import com.lecture.data.UnitBean;
 import com.lecture.item.activity.MoreAct;
 import com.lecture.item.activity.MovieIntroAct;
 import com.lecture.media.R;
 import com.lecture.util.Param;
+import com.lecture.util.SharedPrefsUtil;
 
 public class RecommendFrag extends Fragment {
 	// 数据
@@ -36,7 +42,7 @@ public class RecommendFrag extends Fragment {
 	ArrayList<ProgramBean> programHots;// 金典热播
 	ArrayList<ProgramBean> programAgos;// 以往热播
 	ArrayList<ProgramBean> programBeans;// 响应点击事件
-	private FinalBitmap fb = null;
+	// private FinalBitmap fb = null;
 	// 布局
 	private ArrayList<View> pageViews;// viewPager
 	private ViewPager viewPager;
@@ -69,14 +75,56 @@ public class RecommendFrag extends Fragment {
 	}
 
 	private void initData() {
-		if (DbData.isNetworkConnected(getActivity())) {
-			fb = FinalBitmap.create(getActivity());
-		}
 		try {
 			programTodays = DbData.getProgramBeansToday();// 今日热播
 			programHots = DbData.getProgramBeansHot();// 金典热播
 			programAgos = DbData.getProgramBeansAgo();// 以往热播
 			programBeans = new ArrayList<ProgramBean>();// 响应
+
+			// 请求网络数据
+			final ProgramBean programBean = DbData.getProgramBeanLast();
+			UnitBean unitBean = DbData.getUnitBeanLast();
+			if (programBean == null || unitBean == null) {
+				return;
+			}
+			BaseApi.ONLINE = SharedPrefsUtil.getValue(getActivity(), "lecture", SharedPrefsUtil.IP, "http://172.30.106.1:8080");
+
+			final FinalHttp http = new FinalHttp();
+			http.configCharset("gb2312");
+			http.get(BaseApi.ONLINE + "/lecture/program/info?id=" + programBean.getId() + "&episode=" + programBean.getNum(), new AjaxCallBack<String>() {
+				// 当我们请求失败的时候会被调用，errorNo是请求失败之后，服务器的错误码,StrMsg则是错误信息
+				@Override
+				public void onFailure(Throwable t, int errorNo, String strMsg) {
+					super.onFailure(t, errorNo, strMsg);
+					Log.d("FinalHttp==", "onFailure:" + strMsg);
+				}
+
+				// 如果请求成功，则调用这个回调函数，t就是服务器返回的字符串信息
+				@SuppressWarnings("unchecked")
+				@Override
+				public void onSuccess(String t) {
+					super.onSuccess(t);
+					Log.d("FinalHttp==", "onSuccess:" + t);
+					Gson gson = new Gson();
+					Data data = gson.fromJson(t, Data.class);
+					if (data.programBeans != null) {
+						DbData.insertProgramBean(data.programBeans);
+						// 请求图片
+						for (Data.ProgramBean p : data.programBeans) {
+							String img = "img" + p.getId() + ".jpg";
+							http.download(BaseApi.ONLINE + "/lecture/" + img, DbData.fileImage + "/" + img, null);
+						}
+					}
+					if (data.unitBeans != null) {
+						DbData.insertUnitBean(data.unitBeans);
+						if (data.programBeans == null) {
+							programBean.setNum(programBean.getNum() + 1);
+							DbData.upDateProgramBean(programBean);
+						}
+					}
+				}
+
+			});
 		} catch (Exception e) {
 			System.out.println("ItemRecommend initData error");
 		}
@@ -91,11 +139,7 @@ public class RecommendFrag extends Fragment {
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			final ImageView imageView = new ImageView(getActivity());
 			imageView.setScaleType(ScaleType.FIT_XY);
-//			if (fb != null) {
-//				fb.display(imageView, DbData.recommendUrl[i]);
-//			} else {
-				imageView.setImageResource(viewPagerImageId[i]);
-//			}
+			imageView.setImageResource(viewPagerImageId[i]);
 			layout.addView(imageView, lp);
 			pageViews.add(layout);
 		}
@@ -160,8 +204,12 @@ public class RecommendFrag extends Fragment {
 					break;
 				}
 				movie_image.setTag(programBean);
-				movie_image.setImageDrawable((programBean.image));
-				movie_text.setText("《" + programBean.getName() + "》");
+				movie_image.setImageDrawable((DbData.getDrawableById(programBean.getId())));
+				if (programBean.getName().length() > 12) {
+					movie_text.setText("《" + programBean.getName().substring(0, 7) + "..." + programBean.getName().substring(programBean.getName().length() - 4) + "》");
+				} else {
+					movie_text.setText("《" + programBean.getName() + "》");
+				}
 				programBeans.add(programBean);
 				movie_images[i * 6 + j] = movie_image;
 			}

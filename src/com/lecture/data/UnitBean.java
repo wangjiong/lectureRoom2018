@@ -22,6 +22,17 @@ public class UnitBean {
 	 */
 	int Segment;
 
+	public UnitBean() {
+
+	}
+
+	public UnitBean(String Title, int Episode, String Name, int Segment) {
+		this.Title = Title;
+		this.Episode = Episode;
+		this.Name = Name;
+		this.Segment = Segment;
+	}
+
 	public String getTitle() {
 		return Title;
 	}
