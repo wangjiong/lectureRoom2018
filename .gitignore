@@ -1,0 +1,12 @@
+.classpath
+bin/
+gen/
+.settings/
+.project
+local.properties
+target/
+/bin/
+/bin/
+/bin/
+/bin/
+/bin/
