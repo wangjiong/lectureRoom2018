@@ -99,6 +99,40 @@ android.support.v4.widget.SwipeRefreshLayout: void setOnRefreshListener(android.
 android.support.v4.widget.SwipeRefreshLayout: void setTriggerPercentage(float)
 android.support.v4.widget.SwipeRefreshLayout: void setRefreshing(boolean)
 android.support.v4.widget.SwipeRefreshLayout: void setTargetOffsetTopAndBottom(int)
+com.google.gson.FieldNamingPolicy: com.google.gson.FieldNamingPolicy[] values()
+com.google.gson.FieldNamingPolicy: com.google.gson.FieldNamingPolicy valueOf(java.lang.String)
+com.google.gson.LongSerializationPolicy: com.google.gson.LongSerializationPolicy[] values()
+com.google.gson.LongSerializationPolicy: com.google.gson.LongSerializationPolicy valueOf(java.lang.String)
+com.google.gson.stream.JsonToken: com.google.gson.stream.JsonToken[] values()
+com.google.gson.stream.JsonToken: com.google.gson.stream.JsonToken valueOf(java.lang.String)
+com.lecture.data.BaseApi
+com.lecture.data.BaseApi: java.lang.String ONLINE
+com.lecture.data.BaseApi: void <clinit>()
+com.lecture.data.BaseApi: BaseApi()
+com.lecture.data.Data
+com.lecture.data.Data: java.util.List programBeans
+com.lecture.data.Data: java.util.List unitBeans
+com.lecture.data.Data: Data()
+com.lecture.data.Data$ProgramBean
+com.lecture.data.Data$ProgramBean: java.lang.String Id
+com.lecture.data.Data$ProgramBean: java.lang.String Name
+com.lecture.data.Data$ProgramBean: int Dynasty
+com.lecture.data.Data$ProgramBean: java.lang.String Author
+com.lecture.data.Data$ProgramBean: int PlayTime
+com.lecture.data.Data$ProgramBean: int Num
+com.lecture.data.Data$ProgramBean: Data$ProgramBean()
+com.lecture.data.Data$ProgramBean: java.lang.String getId()
+com.lecture.data.Data$ProgramBean: void setId(java.lang.String)
+com.lecture.data.Data$ProgramBean: java.lang.String getName()
+com.lecture.data.Data$ProgramBean: void setName(java.lang.String)
+com.lecture.data.Data$ProgramBean: int getDynasty()
+com.lecture.data.Data$ProgramBean: void setDynasty(int)
+com.lecture.data.Data$ProgramBean: java.lang.String getAuthor()
+com.lecture.data.Data$ProgramBean: void setAuthor(java.lang.String)
+com.lecture.data.Data$ProgramBean: int getPlayTime()
+com.lecture.data.Data$ProgramBean: void setPlayTime(int)
+com.lecture.data.Data$ProgramBean: int getNum()
+com.lecture.data.Data$ProgramBean: void setNum(int)
 com.lecture.data.DataBaseHelper
 com.lecture.data.DataBaseHelper: java.lang.String DB_PATH
 com.lecture.data.DataBaseHelper: java.lang.String DB_NAME
@@ -121,6 +155,7 @@ com.lecture.data.DbData: boolean sPrepare
 com.lecture.data.DbData: java.io.File fileCache
 com.lecture.data.DbData: java.io.File fileMovieCache
 com.lecture.data.DbData: java.io.File fileDownload
+com.lecture.data.DbData: java.io.File fileImage
 com.lecture.data.DbData: java.util.List sDownloadBeans
 com.lecture.data.DbData: java.util.List sDownloadingBeans
 com.lecture.data.DbData: int playTime
@@ -130,11 +165,17 @@ com.lecture.data.DbData: java.lang.String[] recommendId
 com.lecture.data.DbData: void <clinit>()
 com.lecture.data.DbData: DbData(android.content.Context)
 com.lecture.data.DbData: com.lecture.data.ProgramBean getProgramBeanByCursor(android.database.Cursor)
+com.lecture.data.DbData: com.lecture.data.UnitBean getUnitBeanByCursor(android.database.Cursor)
+com.lecture.data.DbData: com.lecture.data.ProgramBean getProgramBeanLast()
+com.lecture.data.DbData: com.lecture.data.UnitBean getUnitBeanLast()
 com.lecture.data.DbData: com.lecture.data.ProgramBean getProgramBeanById(java.lang.String)
 com.lecture.data.DbData: com.lecture.data.ProgramBean getProgramBeanByTitle(java.lang.String)
 com.lecture.data.DbData: com.lecture.data.UnitBean getUnitBeanByTitleAndEpisode(java.lang.String,int)
 com.lecture.data.DbData: java.lang.String getProgramBeanIdByUnitBeanTitle(java.lang.String)
 com.lecture.data.DbData: java.util.ArrayList getProgramBeansRecommend(int)
+com.lecture.data.DbData: void upDateProgramBean(com.lecture.data.ProgramBean)
+com.lecture.data.DbData: void insertProgramBean(java.util.List)
+com.lecture.data.DbData: void insertUnitBean(java.util.List)
 com.lecture.data.DbData: java.util.ArrayList getProgramBeansToday()
 com.lecture.data.DbData: java.util.ArrayList getProgramBeansHot()
 com.lecture.data.DbData: java.util.ArrayList getProgramBeansAgo()
@@ -149,6 +190,7 @@ com.lecture.data.DbData: boolean searchByTime(java.lang.String)
 com.lecture.data.DbData: java.lang.String[] getSearchStrings()
 com.lecture.data.DbData: android.graphics.drawable.Drawable getDrawableById(java.lang.String)
 com.lecture.data.DbData: android.graphics.Bitmap getImageFromAssetsFile(java.lang.String)
+com.lecture.data.DbData: android.graphics.Bitmap getImageFromCatchFile(java.lang.String)
 com.lecture.data.DbData: boolean createFile()
 com.lecture.data.DbData: java.io.File createDownload(com.lecture.data.UnitBean)
 com.lecture.data.DbData: void createDownloadSuccess(java.io.File)
@@ -308,8 +350,10 @@ com.lecture.media.R$drawable: int c03
 com.lecture.media.R$drawable: int c04
 com.lecture.media.R$drawable: int c05
 com.lecture.media.R$drawable: int c06
+com.lecture.media.R$drawable: int c061
 com.lecture.media.R$drawable: int c07
 com.lecture.media.R$drawable: int c08
+com.lecture.media.R$drawable: int c081
 com.lecture.media.R$drawable: int c09
 com.lecture.media.R$drawable: int c10
 com.lecture.media.R$drawable: int c11
@@ -410,6 +454,7 @@ com.lecture.media.R$id: int search_back
 com.lecture.media.R$id: int search_back_fl
 com.lecture.media.R$id: int search_button
 com.lecture.media.R$id: int search_text
+com.lecture.media.R$id: int setting
 com.lecture.media.R$id: int stop_down
 com.lecture.media.R$id: int surface
 com.lecture.media.R$id: int text_download
@@ -1723,26 +1768,18 @@ io.vov.vitamio.widget.VideoView$9: VideoView$9(io.vov.vitamio.widget.VideoView)
 io.vov.vitamio.widget.VideoView$9: void onTimedTextUpdate(byte[],int,int)
 io.vov.vitamio.widget.VideoView$9: void onTimedText(java.lang.String)
 net.tsz.afinal.FinalActivity
-net.tsz.afinal.FinalActivity: int[] $SWITCH_TABLE$net$tsz$afinal$FinalActivity$Method
 net.tsz.afinal.FinalActivity: FinalActivity()
+net.tsz.afinal.FinalActivity: void onCreate(android.os.Bundle)
 net.tsz.afinal.FinalActivity: void setContentView(int)
 net.tsz.afinal.FinalActivity: void setContentView(android.view.View,android.view.ViewGroup$LayoutParams)
 net.tsz.afinal.FinalActivity: void setContentView(android.view.View)
 net.tsz.afinal.FinalActivity: void initInjectedView(android.app.Activity)
 net.tsz.afinal.FinalActivity: void initInjectedView(java.lang.Object,android.view.View)
+net.tsz.afinal.FinalActivity: void setViewClickListener(java.lang.Object,java.lang.reflect.Field,java.lang.String)
+net.tsz.afinal.FinalActivity: void setViewLongClickListener(java.lang.Object,java.lang.reflect.Field,java.lang.String)
+net.tsz.afinal.FinalActivity: void setItemClickListener(java.lang.Object,java.lang.reflect.Field,java.lang.String)
+net.tsz.afinal.FinalActivity: void setItemLongClickListener(java.lang.Object,java.lang.reflect.Field,java.lang.String)
 net.tsz.afinal.FinalActivity: void setViewSelectListener(java.lang.Object,java.lang.reflect.Field,java.lang.String,java.lang.String)
-net.tsz.afinal.FinalActivity: void setListener(java.lang.Object,java.lang.reflect.Field,java.lang.String,net.tsz.afinal.FinalActivity$Method)
-net.tsz.afinal.FinalActivity: int[] $SWITCH_TABLE$net$tsz$afinal$FinalActivity$Method()
-net.tsz.afinal.FinalActivity$Method
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method Click
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method LongClick
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method ItemClick
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method itemLongClick
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method[] ENUM$VALUES
-net.tsz.afinal.FinalActivity$Method: void <clinit>()
-net.tsz.afinal.FinalActivity$Method: FinalActivity$Method(java.lang.String,int)
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method[] values()
-net.tsz.afinal.FinalActivity$Method: net.tsz.afinal.FinalActivity$Method valueOf(java.lang.String)
 net.tsz.afinal.FinalBitmap
 net.tsz.afinal.FinalBitmap: net.tsz.afinal.FinalBitmap$FinalBitmapConfig mConfig
 net.tsz.afinal.FinalBitmap: net.tsz.afinal.bitmap.core.BitmapCache mImageCache
@@ -1887,14 +1924,12 @@ net.tsz.afinal.FinalDb: void update(java.lang.Object,java.lang.String)
 net.tsz.afinal.FinalDb: void delete(java.lang.Object)
 net.tsz.afinal.FinalDb: void deleteById(java.lang.Class,java.lang.Object)
 net.tsz.afinal.FinalDb: void deleteByWhere(java.lang.Class,java.lang.String)
-net.tsz.afinal.FinalDb: void deleteAll(java.lang.Class)
-net.tsz.afinal.FinalDb: void dropTable(java.lang.Class)
 net.tsz.afinal.FinalDb: void dropDb()
 net.tsz.afinal.FinalDb: void exeSqlInfo(net.tsz.afinal.db.sqlite.SqlInfo)
 net.tsz.afinal.FinalDb: java.lang.Object findById(java.lang.Object,java.lang.Class)
 net.tsz.afinal.FinalDb: java.lang.Object findWithManyToOneById(java.lang.Object,java.lang.Class)
 net.tsz.afinal.FinalDb: java.lang.Object findWithManyToOneById(java.lang.Object,java.lang.Class,java.lang.Class[])
-net.tsz.afinal.FinalDb: java.lang.Object loadManyToOne(net.tsz.afinal.db.sqlite.DbModel,java.lang.Object,java.lang.Class,java.lang.Class[])
+net.tsz.afinal.FinalDb: java.lang.Object loadManyToOne(java.lang.Object,java.lang.Class,java.lang.Class[])
 net.tsz.afinal.FinalDb: java.lang.Object findWithOneToManyById(java.lang.Object,java.lang.Class)
 net.tsz.afinal.FinalDb: java.lang.Object findWithOneToManyById(java.lang.Object,java.lang.Class,java.lang.Class[])
 net.tsz.afinal.FinalDb: java.lang.Object loadOneToMany(java.lang.Object,java.lang.Class,java.lang.Class[])
@@ -2279,12 +2314,17 @@ net.tsz.afinal.bitmap.core.LruMemoryCache: int evictionCount()
 net.tsz.afinal.bitmap.core.LruMemoryCache: java.util.Map snapshot()
 net.tsz.afinal.bitmap.core.LruMemoryCache: java.lang.String toString()
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl
-net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: java.util.HashMap mMemoryCache
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: net.tsz.afinal.bitmap.core.LruMemoryCache mMemoryCache
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: SoftMemoryCacheImpl(int)
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: void put(java.lang.String,android.graphics.Bitmap)
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: android.graphics.Bitmap get(java.lang.String)
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: void evictAll()
 net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl: void remove(java.lang.String)
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl$1
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl$1: net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl this$0
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl$1: SoftMemoryCacheImpl$1(net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl,int)
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl$1: int sizeOf(java.lang.String,java.lang.ref.SoftReference)
+net.tsz.afinal.bitmap.core.SoftMemoryCacheImpl$1: int sizeOf(java.lang.Object,java.lang.Object)
 net.tsz.afinal.bitmap.display.Displayer
 net.tsz.afinal.bitmap.display.Displayer: void loadCompletedisplay(android.view.View,android.graphics.Bitmap,net.tsz.afinal.bitmap.core.BitmapDisplayConfig)
 net.tsz.afinal.bitmap.display.Displayer: void loadFailDisplay(android.view.View,android.graphics.Bitmap)
@@ -2646,14 +2686,11 @@ net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Object manyEntity
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Class manyClazz
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Class oneClazz
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: net.tsz.afinal.FinalDb db
-net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Object fieldValue
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Object oneEntity
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: boolean hasLoaded
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: ManyToOneLazyLoader(java.lang.Object,java.lang.Class,java.lang.Class,net.tsz.afinal.FinalDb)
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Object get()
 net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: void set(java.lang.Object)
-net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: java.lang.Object getFieldValue()
-net.tsz.afinal.db.sqlite.ManyToOneLazyLoader: void setFieldValue(java.lang.Object)
 net.tsz.afinal.db.sqlite.OneToManyLazyLoader
 net.tsz.afinal.db.sqlite.OneToManyLazyLoader: java.lang.Object ownerEntity
 net.tsz.afinal.db.sqlite.OneToManyLazyLoader: java.lang.Class ownerClazz
@@ -2698,6 +2735,8 @@ net.tsz.afinal.db.table.Id: Id()
 net.tsz.afinal.db.table.KeyValue
 net.tsz.afinal.db.table.KeyValue: java.lang.String key
 net.tsz.afinal.db.table.KeyValue: java.lang.Object value
+net.tsz.afinal.db.table.KeyValue: java.text.SimpleDateFormat sdf
+net.tsz.afinal.db.table.KeyValue: void <clinit>()
 net.tsz.afinal.db.table.KeyValue: KeyValue(java.lang.String,java.lang.Object)
 net.tsz.afinal.db.table.KeyValue: KeyValue()
 net.tsz.afinal.db.table.KeyValue: java.lang.String getKey()
@@ -2722,9 +2761,12 @@ net.tsz.afinal.db.table.Property: java.lang.Class dataType
 net.tsz.afinal.db.table.Property: java.lang.reflect.Field field
 net.tsz.afinal.db.table.Property: java.lang.reflect.Method get
 net.tsz.afinal.db.table.Property: java.lang.reflect.Method set
+net.tsz.afinal.db.table.Property: java.text.SimpleDateFormat sdf
+net.tsz.afinal.db.table.Property: void <clinit>()
 net.tsz.afinal.db.table.Property: Property()
 net.tsz.afinal.db.table.Property: void setValue(java.lang.Object,java.lang.Object)
 net.tsz.afinal.db.table.Property: java.lang.Object getValue(java.lang.Object)
+net.tsz.afinal.db.table.Property: java.util.Date stringToDateTime(java.lang.String)
 net.tsz.afinal.db.table.Property: java.lang.String getFieldName()
 net.tsz.afinal.db.table.Property: void setFieldName(java.lang.String)
 net.tsz.afinal.db.table.Property: java.lang.String getColumn()
@@ -2926,7 +2968,7 @@ net.tsz.afinal.utils.ClassUtils: java.util.List getPropertyList(java.lang.Class)
 net.tsz.afinal.utils.ClassUtils: java.util.List getManyToOneList(java.lang.Class)
 net.tsz.afinal.utils.ClassUtils: java.util.List getOneToManyList(java.lang.Class)
 net.tsz.afinal.utils.FieldUtils
-net.tsz.afinal.utils.FieldUtils: java.text.SimpleDateFormat SDF
+net.tsz.afinal.utils.FieldUtils: java.text.SimpleDateFormat sdf
 net.tsz.afinal.utils.FieldUtils: void <clinit>()
 net.tsz.afinal.utils.FieldUtils: FieldUtils()
 net.tsz.afinal.utils.FieldUtils: java.lang.reflect.Method getFieldGetMethod(java.lang.Class,java.lang.reflect.Field)

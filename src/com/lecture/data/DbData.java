@@ -72,7 +72,7 @@ public class DbData {
 				for (int i = 0; i < allDownFiles.length; i++) {
 					File[] movies = allDownFiles[i].listFiles();// 每一集的文件夹,movies中为"movie01.mp4"，"movie02.mp4","success","state 95 8"
 					if (movies != null && movies.length > 0) {
-						for (int j = 0; j < movies.length; j++) {
+						for (int j = movies.length - 1; j >= 0; j--) {
 							// 下载完成
 							if (movies[j].getName().contains("success")) {
 								String[] s1 = allDownFiles[i].getName().split(" ");// ex:王立群读史记32宠信讲充8
@@ -309,12 +309,12 @@ public class DbData {
 
 	// 分类
 	public static ArrayList<ProgramBean> getProgramBeansClassify(int classifyType) {
-		classifyType -= 1;// 与数据库数据相一致
-		if (classifyType == -1) {
-			classifyType = 14;
-		} else if (classifyType == 0) {
-			classifyType = 15;
-		}
+		// classifyType -= 1;// 与数据库数据相一致
+		// if (classifyType == -1) {
+		// classifyType = 14;
+		// } else if (classifyType == 0) {
+		// classifyType = 15;
+		// }
 		ArrayList<ProgramBean> programBeans = new ArrayList<ProgramBean>();
 		Cursor cursor = null;
 		if (classifyType == 14) {

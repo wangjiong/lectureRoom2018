@@ -92,6 +92,7 @@ public class DownLoad {
 			// 以前从未下载过
 			Toast.makeText(mContext, "开始下载", Toast.LENGTH_SHORT).show();
 			mDownloadBean.setSegment(1);
+			DbData.sFinalDb.update(mDownloadBean);
 		}
 		sDownloading.add(mUnitBean.getTitle() + mUnitBean.getEpisode());
 		initData();

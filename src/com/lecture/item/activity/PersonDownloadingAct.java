@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,7 @@ public class PersonDownloadingAct extends Activity implements OnItemClickListene
 			}
 			holder.imageView.setImageBitmap(DbData.getImageFromAssetsFile("img" + DbData.getProgramBeanIdByUnitBeanTitle(mDownloadingBeans.get(position).getTitle()) + ".jpg"));
 			holder.textView.setText("名称：《" + mDownloadingBeans.get(position).getTitle() + "》\n播放集数：" + mDownloadingBeans.get(position).getEpisode() + "\n标题：" + mDownloadingBeans.get(position).getName());
+			Log.i("onLoading", "\n下载进度：" + mDownloadingBeans.get(position).getDownload() + "%");
 			holder.textViewDownload.setText("\n下载进度：" + mDownloadingBeans.get(position).getDownload() + "%");
 			if (DownLoad.sDownloading.contains(mDownloadingBeans.get(position).getTitle() + mDownloadingBeans.get(position).getEpisode())) {
 				holder.DownloadState.setText("状态：下载中");

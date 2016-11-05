@@ -24,8 +24,10 @@ import com.lecture.util.Util;
 public class ClassifyFrag extends Fragment {
 	// 数据
 	ArrayList<ProgramBean> mMorePrograms = new ArrayList<ProgramBean>();
-	String[] texts = new String[] { "排行版", "经典荟萃", "夏商周", "春秋战国", "秦", "汉", "三国", "晋", "隋", "唐", "宋", "元", "明", "清", "近代" };
-	int[] images = new int[] { R.drawable.c14, R.drawable.c15, R.drawable.c01, R.drawable.c02, R.drawable.c03, R.drawable.c04, R.drawable.c05, R.drawable.c06, R.drawable.c07, R.drawable.c08, R.drawable.c09, R.drawable.c10, R.drawable.c11, R.drawable.c12, R.drawable.c13 };
+	String[] texts = new String[] { "排行版", "经典荟萃", "夏商周", "春秋战国", "秦", "汉", "三国", "晋", "南北朝", "隋", "唐", "五代十国", "宋", "元", "明", "清", "近代" };
+	int[] images = new int[] { R.drawable.c14, R.drawable.c15, R.drawable.c01, R.drawable.c02, R.drawable.c03, R.drawable.c04, R.drawable.c05, R.drawable.c06, R.drawable.c061, R.drawable.c07, R.drawable.c08, R.drawable.c081, R.drawable.c09, R.drawable.c10, R.drawable.c11, R.drawable.c12,
+			R.drawable.c13 };
+	int[] mPosition = { 14, 15, 1, 2, 3, 4, 5, 6, 61, 7, 8, 81, 9, 10, 11, 12, 13 };
 	// 布局
 	GridView gridView;
 
@@ -55,9 +57,8 @@ public class ClassifyFrag extends Fragment {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				// TODO 自动生成的方法存根
 				Intent intent = new Intent(getActivity(), ClassifyAct.class);
-				intent.putExtra(Param.CLASSIFY_TYPE, position);
+				intent.putExtra(Param.CLASSIFY_TYPE, mPosition[position]);
 				startActivity(intent);
 			}
 		});

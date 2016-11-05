@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.lecture.data.BaseApi;
 import com.lecture.data.Data;
 import com.lecture.data.DbData;
@@ -100,27 +101,30 @@ public class RecommendFrag extends Fragment {
 				}
 
 				// 如果请求成功，则调用这个回调函数，t就是服务器返回的字符串信息
-				@SuppressWarnings("unchecked")
 				@Override
 				public void onSuccess(String t) {
 					super.onSuccess(t);
 					Log.d("FinalHttp==", "onSuccess:" + t);
-					Gson gson = new Gson();
-					Data data = gson.fromJson(t, Data.class);
-					if (data.programBeans != null) {
-						DbData.insertProgramBean(data.programBeans);
-						// 请求图片
-						for (Data.ProgramBean p : data.programBeans) {
-							String img = "img" + p.getId() + ".jpg";
-							http.download(BaseApi.ONLINE + "/lecture/" + img, DbData.fileImage + "/" + img, null);
+					try {
+						Gson gson = new Gson();
+						Data data = gson.fromJson(t, Data.class);
+						if (data.programBeans != null) {
+							DbData.insertProgramBean(data.programBeans);
+							// 请求图片
+							for (Data.ProgramBean p : data.programBeans) {
+								String img = "img" + p.getId() + ".jpg";
+								http.download(BaseApi.ONLINE + "/lecture/" + img, DbData.fileImage + "/" + img, null);
+							}
 						}
-					}
-					if (data.unitBeans != null) {
-						DbData.insertUnitBean(data.unitBeans);
-						if (data.programBeans == null) {
-							programBean.setNum(programBean.getNum() + 1);
-							DbData.upDateProgramBean(programBean);
+						if (data.unitBeans != null) {
+							DbData.insertUnitBean(data.unitBeans);
+							if (data.programBeans == null) {
+								programBean.setNum(programBean.getNum() + 1);
+								DbData.upDateProgramBean(programBean);
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 

@@ -217,7 +217,6 @@ public class FinalHttp {
 
     //------------------get 请求-----------------------
     public void get( String url, AjaxCallBack<? extends Object> callBack) {
-    	Log.d("FinalHttp==", "url:"+url);
         get( url, null, callBack);
     }
 
