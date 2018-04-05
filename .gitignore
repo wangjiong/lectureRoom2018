@@ -1,5 +1,7 @@
 .classpath
 bin/
+bin/classes/
+bin/lecture.apk
 gen/
 .settings/
 .project
