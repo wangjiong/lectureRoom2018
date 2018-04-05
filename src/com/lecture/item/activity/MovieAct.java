@@ -376,14 +376,14 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		}
 		if (mIsActivityFlag) {
 			if (mIsVideoPlayFirstStop) {
-				mMediaPlayer.pause();
+				//mMediaPlayer.pause();
 			} else {
 				mMediaPlayer.start();
 			}
 			mIsVideoPlayFirstStop = false;
 			mIsVideoPlay = true;
 		} else {
-			mMediaPlayer.pause();
+			//mMediaPlayer.pause();
 			if (!mIsVideoPlay) {
 				mIsVideoPlayFirstStop = true;
 			}
@@ -445,8 +445,9 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 
 	@Override
 	public void pause() {
-		if (mMediaPlayer.isPlaying())
-			mMediaPlayer.pause();
+		if (mMediaPlayer.isPlaying()){
+			//mMediaPlayer.pause();
+		}
 	}
 
 	@Override
@@ -459,7 +460,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		if (mIsActivityFlag) {
 			mMediaPlayer.start();
 		} else {
-			mMediaPlayer.pause();
+			//mMediaPlayer.pause();
 		}
 	}
 
@@ -556,7 +557,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 			mIsVideoFirst = false;
 		}
 		if (mMediaPlayer != null && mIsVideoPlay && mMediaPlayer.isPlaying()) {
-			mMediaPlayer.pause();
+			//mMediaPlayer.pause();
 		}
 		if (controller != null && controller.isShowing()) {
 			controller.hide();
