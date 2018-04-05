@@ -142,6 +142,12 @@ public class DownLoad {
 					refreshDownloading();
 					// 创建记录下载完成的文件
 					DbData.createDownloadSuccess(mFile);
+					
+					// 下载完成后继续下载后面的一集节目
+					UnitBean unitBean = DbData.getUnitBeanByTitleAndEpisode(mUnitBean.getTitle(), mUnitBean.getEpisode() + 1);
+					if (unitBean != null) {
+						new DownLoad(unitBean).downLoad();
+					}
 				}
 			}
 
