@@ -1,8 +1,7 @@
 .classpath
-bin/
+bin
 gen/
 .settings/
 .project
 local.properties
 target/
-
