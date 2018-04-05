@@ -170,6 +170,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initView() {
 		Log.i(TAG, "initView");
 		setContentView(R.layout.media);
@@ -446,7 +447,7 @@ public class MovieAct extends Activity implements OnBufferingUpdateListener, OnC
 	@Override
 	public void pause() {
 		if (mMediaPlayer.isPlaying()){
-			//mMediaPlayer.pause();
+			mMediaPlayer.pause();
 		}
 	}
 
